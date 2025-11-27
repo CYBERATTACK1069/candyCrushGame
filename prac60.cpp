@@ -31,12 +31,18 @@ string shapes[] = {
 
 void gravity(int matrix[100][100])
 {
-	for (int i = 0; i < rowCols; i++)
+	for (int i = rowCols - 1; i > 0; i--)
 	{
 		for (int j = 0; j < rowCols; j++)
 		{
-			if (!matrix[0][j])
+			while (!matrix[0][j])
 			{
+				if (matrix[i][j] == 0)
+				{
+					int temp = matrix[i - 1][j];
+					matrix[i - 1][j] = matrix[i][j];
+					matrix[i][j] = temp;
+				}
 			}
 		}
 	}
@@ -242,7 +248,9 @@ int main()
 						// Redraw the whole table to show the swap
 						system("cls");
 						checkRowColMatch(matrix);
+						gravity(matrix);
 						displayTable(matrix);
+						// checkRowColMatch(matrix);
 
 						gotoxy(0, 20);
 						cout << "Swapped!" << endl;
