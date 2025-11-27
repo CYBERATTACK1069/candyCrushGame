@@ -30,10 +30,19 @@ string shapes[] = {
 		"(O)"	 // Orange: Hexagon/Orb
 };
 
+void swapValues(int &a, int &b)
+{
+	int temp = a;
+	a = b;
+	b = temp;
+}
+
 bool checkRowColMatch(int matrix[100][100])
 {
 	bool isMatch = false;
 	int key;
+
+	// it is for checking the rows
 	for (int i = 0; i < rowCols; i++)
 	{
 		int currentCount = 1;
@@ -51,6 +60,7 @@ bool checkRowColMatch(int matrix[100][100])
 				{
 					isMatch = true;
 					// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << endl;
+					// cout << colors[0];
 					for (int k = 0; k < currentCount; k++)
 					{
 						matrix[i][j - k] = 0;
@@ -68,6 +78,40 @@ bool checkRowColMatch(int matrix[100][100])
 				matrix[i][rowCols - 1 - k] = 0;
 			}
 			// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << " replaced by 0." << endl;
+		}
+	}
+
+	// it is for checking the columns
+	for (int j = 0; j < rowCols; j++)
+	{
+		int colCount = 1;
+		for (int i = 0; i < rowCols - 1; i++)
+		{
+			if (matrix[i][j] != 0 && matrix[i][j] == matrix[i + 1][j])
+			{
+				colCount++;
+			}
+			else
+			{
+				if (colCount >= 3)
+				{
+					isMatch = true;
+					for (int k = 0; k < colCount; k++)
+					{
+						matrix[i - k][j] = 0;
+					}
+				}
+				colCount = 1;
+			}
+		}
+		// Check if the last group in the column was a match
+		if (colCount >= 3)
+		{
+			isMatch = true;
+			for (int k = 0; k < colCount; k++)
+			{
+				matrix[rowCols - 1 - k][j] = 0;
+			}
 		}
 	}
 	return isMatch;
@@ -127,13 +171,13 @@ void genTableValues(int matrix[100][100])
 
 void checkFirstRowZeroes(int matrix[100][100])
 {
-	int i = 0;
+
 	for (int j = 0; j < rowCols; j++)
 	{
-		if (matrix[i][j] == 0)
+		if (matrix[0][j] == 0)
 		{
 			// Sleep(2000);
-			matrix[i][j] = generateRandomNumber(1, 5);
+			matrix[0][j] = generateRandomNumber(1, 5);
 		}
 	}
 }
@@ -150,11 +194,17 @@ void gravity(int matrix[100][100])
 			{
 				if (matrix[i][j] == 0 && matrix[i - 1][j] != 0)
 				{
-					int temp = matrix[i - 1][j];
-					matrix[i - 1][j] = matrix[i][j];
-					matrix[i][j] = temp;
+					swapValues(matrix[i][j], matrix[i - 1][j]);
 					moved = true;
 				}
+				// for (int j = 0; j < rowCols; j++)
+				// {
+				if (matrix[0][j] == 0)
+				{
+					matrix[0][j] = generateRandomNumber(1, 5);
+					moved = true;
+				}
+				// }
 			}
 		}
 	}
@@ -271,9 +321,11 @@ int main()
 					if (dx + dy == 1)
 					{
 						// SWAP Logic
-						int temp = matrix[selected_y][selected_x];
-						matrix[selected_y][selected_x] = matrix[gridY][gridX];
-						matrix[gridY][gridX] = temp;
+						// int temp = matrix[selected_y][selected_x];
+						// matrix[selected_y][selected_x] = matrix[gridY][gridX];
+						// matrix[gridY][gridX] = temp;
+
+						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
 
 						// Redraw the whole table to show the swap
 						system("cls");
@@ -283,8 +335,8 @@ int main()
 						while (checkRowColMatch(matrix))
 						{
 							Sleep(10000); // Optional delay to see the cascade
-							gravity(matrix);
 							system("cls");
+							gravity(matrix);
 							displayTable(matrix);
 							userMoves--;
 							gotoxy(40, 5);
