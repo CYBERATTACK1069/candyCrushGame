@@ -9,6 +9,7 @@ game
 #include <cstdlib> // For system("cls")
 using namespace std;
 int rowCols = 8;
+int userMoves = 20;
 string colors[7] = {
 		"\033[37m",			 // White (Bright White)
 		"\033[31m",			 // Red
@@ -139,15 +140,21 @@ void checkFirstRowZeroes(int matrix[100][100])
 
 void gravity(int matrix[100][100])
 {
-	for (int i = rowCols - 1; i > 0; i--)
+	bool moved = true;
+	while (moved)
 	{
-		for (int j = 0; j < rowCols; j++)
+		moved = false;
+		for (int i = rowCols - 1; i > 0; i--)
 		{
-			if (matrix[i][j] == 0)
+			for (int j = 0; j < rowCols; j++)
 			{
-				int temp = matrix[i - 1][j];
-				matrix[i - 1][j] = matrix[i][j];
-				matrix[i][j] = temp;
+				if (matrix[i][j] == 0 && matrix[i - 1][j] != 0)
+				{
+					int temp = matrix[i - 1][j];
+					matrix[i - 1][j] = matrix[i][j];
+					matrix[i][j] = temp;
+					moved = true;
+				}
 			}
 		}
 	}
@@ -248,6 +255,10 @@ int main()
 
 					gotoxy(0, 20);
 					cout << "Selected (" << selected_y + 1 << ", " << selected_x + 1 << "). Now pick a neighbor to swap.      " << endl;
+					gotoxy(0, 0);
+
+					gotoxy(40, 5);
+					cout << "Moves left: " << userMoves << endl;
 				}
 				else
 				{
@@ -271,11 +282,15 @@ int main()
 						// Cascading Loop
 						while (checkRowColMatch(matrix))
 						{
+							Sleep(10000); // Optional delay to see the cascade
 							gravity(matrix);
 							system("cls");
 							displayTable(matrix);
-							Sleep(500); // Optional delay to see the cascade
+							userMoves--;
+							gotoxy(40, 5);
+							cout << "Moves left: " << userMoves << endl;
 						}
+						// gravity(matrix);
 
 						gotoxy(0, 20);
 						cout << "Swapped!" << endl;
@@ -291,16 +306,14 @@ int main()
 				}
 				break;
 			}
-
 			moveCursor(gridX, gridY); // Move the cursor to the new position
 		}
 
 		// Sleep(100); // Add a small delay to prevent high CPU usage
 		// checkRowColMatch(matrix);
-		// gravity(matrix);
+		gravity(matrix);
 		// checkFirstRowZeroes(matrix);
 		// displayTable(matrix);
-		
 	}
 
 	return 0;
