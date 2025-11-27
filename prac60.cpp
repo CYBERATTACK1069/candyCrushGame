@@ -35,14 +35,11 @@ void gravity(int matrix[100][100])
 	{
 		for (int j = 0; j < rowCols; j++)
 		{
-			while (!matrix[0][j])
+			if (matrix[i][j] == 0)
 			{
-				if (matrix[i][j] == 0)
-				{
-					int temp = matrix[i - 1][j];
-					matrix[i - 1][j] = matrix[i][j];
-					matrix[i][j] = temp;
-				}
+				int temp = matrix[i - 1][j];
+				matrix[i - 1][j] = matrix[i][j];
+				matrix[i][j] = temp;
 			}
 		}
 	}
