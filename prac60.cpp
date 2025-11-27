@@ -29,8 +29,9 @@ string shapes[] = {
 		"(O)"	 // Orange: Hexagon/Orb
 };
 
-void checkRowColMatch(int matrix[100][100])
+bool checkRowColMatch(int matrix[100][100])
 {
+	bool isMatch = false;
 	int key;
 	for (int i = 0; i < rowCols; i++)
 	{
@@ -39,7 +40,7 @@ void checkRowColMatch(int matrix[100][100])
 		{
 			key = matrix[i][j];
 
-			if (matrix[i][j] == matrix[i][j + 1])
+			if (matrix[i][j] != 0 && matrix[i][j] == matrix[i][j + 1])
 			{
 				++currentCount;
 			}
@@ -47,6 +48,7 @@ void checkRowColMatch(int matrix[100][100])
 			{
 				if (currentCount >= 3)
 				{
+					isMatch = true;
 					// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << endl;
 					for (int k = 0; k < currentCount; k++)
 					{
@@ -59,9 +61,15 @@ void checkRowColMatch(int matrix[100][100])
 		// Check if the last group in the row was a match
 		if (currentCount >= 3)
 		{
+			isMatch = true;
+			for (int k = 0; k < currentCount; k++)
+			{
+				matrix[i][rowCols - 1 - k] = 0;
+			}
 			// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << " replaced by 0." << endl;
 		}
 	}
+	return isMatch;
 }
 
 int generateRandomNumber(int min, int max)
@@ -123,7 +131,8 @@ void checkFirstRowZeroes(int matrix[100][100])
 	{
 		if (matrix[i][j] == 0)
 		{
-			matrix[i][j] == generateRandomNumber(1, 5);
+			// Sleep(2000);
+			matrix[i][j] = generateRandomNumber(1, 5);
 		}
 	}
 }
@@ -142,7 +151,6 @@ void gravity(int matrix[100][100])
 			}
 		}
 	}
-	// Sleep(1000);
 	checkFirstRowZeroes(matrix);
 }
 
@@ -258,14 +266,17 @@ int main()
 
 						// Redraw the whole table to show the swap
 						system("cls");
-						checkRowColMatch(matrix);
-						gravity(matrix);
-						// checkFirstRowZeroes(matrix);
 						displayTable(matrix);
-						checkRowColMatch(matrix);
-						gravity(matrix);
 
-						// checkRowColMatch(matrix);
+						// Cascading Loop
+						while (checkRowColMatch(matrix))
+						{
+							gravity(matrix);
+							system("cls");
+							displayTable(matrix);
+							Sleep(500); // Optional delay to see the cascade
+						}
+
 						gotoxy(0, 20);
 						cout << "Swapped!" << endl;
 					}
@@ -283,7 +294,13 @@ int main()
 
 			moveCursor(gridX, gridY); // Move the cursor to the new position
 		}
+
 		// Sleep(100); // Add a small delay to prevent high CPU usage
+		// checkRowColMatch(matrix);
+		// gravity(matrix);
+		// checkFirstRowZeroes(matrix);
+		// displayTable(matrix);
+		
 	}
 
 	return 0;
