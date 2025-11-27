@@ -29,22 +29,6 @@ string shapes[] = {
 		"(O)"	 // Orange: Hexagon/Orb
 };
 
-void gravity(int matrix[100][100])
-{
-	for (int i = rowCols - 1; i > 0; i--)
-	{
-		for (int j = 0; j < rowCols; j++)
-		{
-			if (matrix[i][j] == 0)
-			{
-				int temp = matrix[i - 1][j];
-				matrix[i - 1][j] = matrix[i][j];
-				matrix[i][j] = temp;
-			}
-		}
-	}
-}
-
 void checkRowColMatch(int matrix[100][100])
 {
 	int key;
@@ -63,7 +47,7 @@ void checkRowColMatch(int matrix[100][100])
 			{
 				if (currentCount >= 3)
 				{
-					cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << endl;
+					// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << endl;
 					for (int k = 0; k < currentCount; k++)
 					{
 						matrix[i][j - k] = 0;
@@ -75,7 +59,7 @@ void checkRowColMatch(int matrix[100][100])
 		// Check if the last group in the row was a match
 		if (currentCount >= 3)
 		{
-			cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << " replaced by 0." << endl;
+			// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << " replaced by 0." << endl;
 		}
 	}
 }
@@ -130,6 +114,36 @@ void genTableValues(int matrix[100][100])
 			}
 		}
 	}
+}
+
+void checkFirstRowZeroes(int matrix[100][100])
+{
+	int i = 0;
+	for (int j = 0; j < rowCols; j++)
+	{
+		if (matrix[i][j] == 0)
+		{
+			matrix[i][j] == generateRandomNumber(1, 5);
+		}
+	}
+}
+
+void gravity(int matrix[100][100])
+{
+	for (int i = rowCols - 1; i > 0; i--)
+	{
+		for (int j = 0; j < rowCols; j++)
+		{
+			if (matrix[i][j] == 0)
+			{
+				int temp = matrix[i - 1][j];
+				matrix[i - 1][j] = matrix[i][j];
+				matrix[i][j] = temp;
+			}
+		}
+	}
+	// Sleep(1000);
+	checkFirstRowZeroes(matrix);
 }
 
 void displayTable(int matrix[100][100])
@@ -246,9 +260,12 @@ int main()
 						system("cls");
 						checkRowColMatch(matrix);
 						gravity(matrix);
+						// checkFirstRowZeroes(matrix);
 						displayTable(matrix);
-						// checkRowColMatch(matrix);
+						checkRowColMatch(matrix);
+						gravity(matrix);
 
+						// checkRowColMatch(matrix);
 						gotoxy(0, 20);
 						cout << "Swapped!" << endl;
 					}
