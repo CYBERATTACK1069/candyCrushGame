@@ -20,21 +20,40 @@ string colors[7] = {
 		"\033[38;5;208m" // Orange (Extended ANSI code, or use \033[31m if simple console)
 };
 
-string shapes[] = {
-		" O ", // White: Circle
-		"[#]", // Red: Square
-		"<> ", // Yellow: Diamond
-		" ^ ", // Purple: Triangle Up
-		"[_]", // Green: Rectangle/Gem
-		" v ", // Blue: Triangle Down
-		"(O)"	 // Orange: Hexagon/Orb
-};
+// string shapes[] = {
+// 		" O ", // White: Circle
+// 		"[#]", // Red: Square
+// 		"<> ", // Yellow: Diamond
+// 		" ^ ", // Purple: Triangle Up
+// 		"[_]", // Green: Rectangle/Gem
+// 		" v ", // Blue: Triangle Down
+// 		"(O)"	 // Orange: Hexagon/Orb
+// };
 
 void swapValues(int &a, int &b)
 {
 	int temp = a;
 	a = b;
 	b = temp;
+}
+
+int generateRandomNumber(int min, int max)
+{
+	// This is now only used for the *initial* seed on the first function call.
+	int localVariable;
+
+	// 'seed' is now static. It is initialized ONLY ONCE.
+	// After the first call, this line is effectively skipped.
+	static size_t seed = (size_t)&localVariable;
+
+	// The LCG formula updates the seed. This new value will be retained
+	// for the next function call because 'seed' is static.
+	seed = (seed * 9301 + 49297);
+
+	// Scale the new seed to the desired range [min, max].
+	int finalNumber = (seed % (max - min + 1));
+
+	return finalNumber + min;
 }
 
 bool checkRowColMatch(int matrix[100][100])
@@ -58,20 +77,36 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 
 				if (currentCount >= 3)
+
 				{
+
 					isMatch = true;
+
 					for (int k = 0; k < currentCount; k++)
+
 					{
+
 						int r = i;
+
 						int c = j - k;
-						gotoxy(c * 4 + 1, r * 2 + 1);
+
+						gotoxy(c * 4 + 1.5, r * 2 + 1);
 
 						cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
 					}
+
 					Sleep(500);
+
 					for (int k = 0; k < currentCount; k++)
 					{
-						matrix[i][j - k] = 0;
+						if (currentCount >= 4 && k == currentCount - 1) // First index of consecutive (j - (currentCount-1))
+						{
+							matrix[i][j - k] = generateRandomNumber(5, 7);
+						}
+						else
+						{
+							matrix[i][j - k] = 0;
+						}
 					}
 				}
 				currentCount = 1;
@@ -91,7 +126,14 @@ bool checkRowColMatch(int matrix[100][100])
 			Sleep(500);
 			for (int k = 0; k < currentCount; k++)
 			{
-				matrix[i][rowCols - 1 - k] = 0;
+				if (currentCount >= 4 && k == currentCount - 1)
+				{
+					matrix[i][rowCols - 1 - k] = generateRandomNumber(5, 7);
+				}
+				else
+				{
+					matrix[i][rowCols - 1 - k] = 0;
+				}
 			}
 		}
 	}
@@ -121,7 +163,14 @@ bool checkRowColMatch(int matrix[100][100])
 					Sleep(500);
 					for (int k = 0; k < colCount; k++)
 					{
-						matrix[i - k][j] = 0;
+						if (colCount >= 4 && k == colCount - 1)
+						{
+							matrix[i - k][j] = generateRandomNumber(5, 7);
+						}
+						else
+						{
+							matrix[i - k][j] = 0;
+						}
 					}
 				}
 				colCount = 1;
@@ -141,30 +190,18 @@ bool checkRowColMatch(int matrix[100][100])
 			Sleep(500);
 			for (int k = 0; k < colCount; k++)
 			{
-				matrix[rowCols - 1 - k][j] = 0;
+				if (colCount >= 4 && k == colCount - 1)
+				{
+					matrix[rowCols - 1 - k][j] = generateRandomNumber(5, 7);
+				}
+				else
+				{
+					matrix[rowCols - 1 - k][j] = 0;
+				}
 			}
 		}
 	}
 	return isMatch;
-}
-
-int generateRandomNumber(int min, int max)
-{
-	// This is now only used for the *initial* seed on the first function call.
-	int localVariable;
-
-	// 'seed' is now static. It is initialized ONLY ONCE.
-	// After the first call, this line is effectively skipped.
-	static size_t seed = (size_t)&localVariable;
-
-	// The LCG formula updates the seed. This new value will be retained
-	// for the next function call because 'seed' is static.
-	seed = (seed * 9301 + 49297);
-
-	// Scale the new seed to the desired range [min, max].
-	int finalNumber = (seed % (max - min + 1));
-
-	return finalNumber + min;
 }
 
 void genTableValues(int matrix[100][100])
@@ -175,7 +212,7 @@ void genTableValues(int matrix[100][100])
 		{
 			while (true)
 			{
-				int randomNumber = generateRandomNumber(1, 5);
+				int randomNumber = generateRandomNumber(1, 4);
 				matrix[i][j] = randomNumber;
 
 				// Check for Horizontal Match (Left) or Vertical Match (Up)
@@ -208,7 +245,7 @@ void checkFirstRowZeroes(int matrix[100][100])
 		if (matrix[0][j] == 0)
 		{
 			// Sleep(2000);
-			matrix[0][j] = generateRandomNumber(1, 5);
+			matrix[0][j] = generateRandomNumber(1, 4);
 		}
 	}
 }
@@ -232,7 +269,7 @@ void gravity(int matrix[100][100])
 				// {
 				if (matrix[0][j] == 0)
 				{
-					matrix[0][j] = generateRandomNumber(1, 5);
+					matrix[0][j] = generateRandomNumber(1, 4);
 					moved = true;
 				}
 				// }
@@ -361,7 +398,8 @@ int main()
 						// Redraw the whole table to show the swap
 						system("cls");
 						displayTable(matrix);
-
+						gotoxy(40, 5);
+						cout << "Moves left : " << userMoves << endl;
 						// Cascading Loop
 						while (checkRowColMatch(matrix) && userMoves != 0)
 						{
