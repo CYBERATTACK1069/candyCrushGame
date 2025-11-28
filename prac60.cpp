@@ -30,11 +30,12 @@ string colors[7] = {
 // 		"(O)"	 // Orange: Hexagon/Orb
 // };
 
-void swapValues(int &a, int &b)
+int swapValues(int &a, int &b)
 {
 	int temp = a;
 	a = b;
 	b = temp;
+	return true;
 }
 
 int generateRandomNumber(int min, int max)
@@ -394,9 +395,18 @@ int main()
 						// matrix[gridY][gridX] = temp;
 
 						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
+						gotoxy(0, 18);
+						cout << "Swapped!" << endl;
 
+						if (!checkRowColMatch(matrix))
+						{
+							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
+						}
 						// Redraw the whole table to show the swap
+						Sleep(10000); // Optional delay to see the cascade
+
 						system("cls");
+						gravity(matrix);
 						displayTable(matrix);
 						gotoxy(40, 5);
 						cout << "Moves left : " << userMoves << endl;
@@ -405,6 +415,7 @@ int main()
 						{
 							Sleep(10000); // Optional delay to see the cascade
 							system("cls");
+
 							gravity(matrix);
 							displayTable(matrix);
 							userMoves--;
@@ -417,9 +428,6 @@ int main()
 							}
 						}
 						// gravity(matrix);
-
-						gotoxy(0, 20);
-						cout << "Swapped!" << endl;
 					}
 					else
 					{
