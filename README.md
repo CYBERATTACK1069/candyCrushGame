@@ -1,34 +1,38 @@
 # My Candy Crush Game
 
-Hi! This is my simple puzzle game written in C++. It works like Candy Crush. I made this to practice arrays and logic.
+Hello! This is my simple puzzle game made with C++. It's like Candy Crush. I built it to learn about arrays and basic programming.
 
 ## How to Play
-1. Run the game. You will see an 8x8 grid with colorful gems.
-2. Use **Arrow Keys** to move the cursor around the board.
-3. Press **Enter** to select a gem.
-4. Move to a neighbor gem (up, down, left, or right) and press **Enter** again to swap them.
-5. If you match 3 or more same gems, they will disappear (turn to 0).
-6. The gravity function will make the zeros go up and gems come down.
+1.  **Start the game.** You'll see a board with an 8x8 grid. It has colorful numbers that look like gems.
+2.  **Move the cursor.** Use the **Arrow Keys** to move a square selector around the board.
+3.  **Pick a gem.** Press **Enter** to choose a gem.
+4.  **Swap with a neighbor.** Move the cursor to a gem next to your first choice (up, down, left, or right). Press **Enter** again to swap them.
+5.  **Make matches.** If you swap gems and create a line of 3 or more of the same colored numbers (horizontally or vertically), they will disappear.
+6.  **L-shaped matches.** You can also match gems in an L-shape for extra points!
+7.  **Score high!** You get 20 moves in total. Try to get the highest score you can!
 
 ## Features
-- **Colors:** I used different ANSI colors for gems.
-- **Shapes:** Each color has a shape like Circle, Square, or Triangle.
-- **Gravity:** When gems match, empty space is filled by gems falling from above.
-- **Random Board:** Every time you start, the board is different.
+-   **Colors:** Different gem types are shown with different colors.
+-   **Gravity:** When gems disappear, new gems fall from the top to fill the empty spaces.
+-   **Special Matches:** The game finds and removes L-shaped matches, not just straight lines.
+-   **Score & Moves:** The game keeps track of your score and how many moves you have left.
+-   **New Board Every Time:** Each time you play, the game board is random and different.
 
-## How to Compile and Run
-I use `g++` to run this code. You need these libraries: `gdi32` and `user32` because I used some Windows functions for the cursor.
+## How to Get the Game Running
+I use `g++` to compile this code. You will need `gdi32` and `user32` libraries. These are for Windows functions that help with the cursor and screen display.
 
-Type this in your terminal:
+To build and run, open your terminal and type these commands:
 ```
 g++ prac60.cpp -o game -lgdi32 -luser32
 game
 ```
 
-## Code details
-- `prac60.cpp`: This is the main file with all the code.
-- `gravity()`: This function moves the blocks down.
-- `checkRowColMatch()`: This checks if 3 gems are same in a row.
-- `genTableValues()`: This fills the table with random numbers.
+## About the Code
+-   `prac60.cpp`: This is the main file with all the game's code.
+-   `help.h`: This file has helper functions for things like moving the cursor on the screen and checking key presses.
+-   `gravity()`: This function makes the blocks fall down.
+-   `checkRowColMatch()`: This function looks for 3 or more matching gems in a row or column.
+-   `checkLPatterns()`: This function checks if there are any L-shaped matches.
+-   `genTableValues()`: This function sets up the game board with random numbers.
 
-Enjoy my game!
+Have fun playing my game!
