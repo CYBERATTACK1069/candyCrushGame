@@ -43,7 +43,10 @@ bool checkLPatterns(int matrix[100][100])
 			if (matrix[i][j] != 0)
 			{
 				key = matrix[i][j];
-				// 1. Down-Right (Corner Top-Left)
+
+				/* Case 1: Down-Right (Corner is Top-Left)
+				 * It checks if (i,j) matches the two gems below it (i+1, i+2) AND the two gems to its right (j+1, j+2).  */
+
 				if (i + 2 < rowCols && j + 2 < rowCols &&
 						matrix[i + 1][j] == key && matrix[i + 2][j] == key &&
 						matrix[i][j + 1] == key && matrix[i][j + 2] == key)
@@ -486,7 +489,7 @@ int main()
 						// matrix[selected_y][selected_x] = matrix[gridY][gridX];
 						// matrix[gridY][gridX] = temp;
 
-						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
+						// swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
 
 						bool lMatch = checkLPatterns(matrix);
 						bool rcMatch = checkRowColMatch(matrix);
@@ -497,12 +500,14 @@ int main()
 						}
 						else
 						{
+							swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
+							displayTable(matrix);
 							gotoxy(0, 20);
 							cout << "Swapped!" << endl;
 							userMoves--;
 						}
 						// Redraw the whole table to show the swap
-						Sleep(10000); // Optional delay to see the cascade
+						// Sleep(10000); // Optional delay to see the cascade
 
 						system("cls");
 						gravity(matrix);
