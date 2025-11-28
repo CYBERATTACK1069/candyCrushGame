@@ -7,28 +7,20 @@ game
 #include "help.h"
 #include <windows.h>
 #include <cstdlib> // For system("cls")
+#include <ctime>	 // For time() to seed rand()
 using namespace std;
 int rowCols = 8;
 int userMoves = 20;
+int score = 0;
 string colors[7] = {
-		"\033[37m",			 // White (Bright White)
-		"\033[31m",			 // Red
-		"\033[33m",			 // Yellow
-		"\033[35m",			 // Purple (Magenta)
-		"\033[32m",			 // Green
-		"\033[34m",			 // Blue
-		"\033[38;5;208m" // Orange (Extended ANSI code, or use \033[31m if simple console)
+		"\033[37m",				// White (Bright White)
+		"\033[31m",				// Red
+		"\033[33m",				// Yellow
+		"\033[35m",				// Purple (Magenta)
+		"\033[32m",				// Green
+		"\033[34m",				// Blue
+		"\033[38;5;208m", // Orange (Extended ANSI code, or use \03331m if simple console)
 };
-
-// string shapes[] = {
-// 		" O ", // White: Circle
-// 		"[#]", // Red: Square
-// 		"<> ", // Yellow: Diamond
-// 		" ^ ", // Purple: Triangle Up
-// 		"[_]", // Green: Rectangle/Gem
-// 		" v ", // Blue: Triangle Down
-// 		"(O)"	 // Orange: Hexagon/Orb
-// };
 
 int swapValues(int &a, int &b)
 {
@@ -38,30 +30,132 @@ int swapValues(int &a, int &b)
 	return true;
 }
 
-int generateRandomNumber(int min, int max)
+void checkL(int matrix[100][100]) {}
+
+bool checkLPatterns(int matrix[100][100])
 {
-	// This is now only used for the *initial* seed on the first function call.
-	int localVariable;
-
-	// 'seed' is now static. It is initialized ONLY ONCE.
-	// After the first call, this line is effectively skipped.
-	static size_t seed = (size_t)&localVariable;
-
-	// The LCG formula updates the seed. This new value will be retained
-	// for the next function call because 'seed' is static.
-	seed = (seed * 9301 + 49297);
-
-	// Scale the new seed to the desired range [min, max].
-	int finalNumber = (seed % (max - min + 1));
-
-	return finalNumber + min;
+	bool isMatch = false;
+	int key;
+	for (int i = 0; i < rowCols; i++)
+	{
+		for (int j = 0; j < rowCols; j++)
+		{
+			if (matrix[i][j] != 0)
+			{
+				key = matrix[i][j];
+				// 1. Down-Right (Corner Top-Left)
+				if (i + 2 < rowCols && j + 2 < rowCols &&
+						matrix[i + 1][j] == key && matrix[i + 2][j] == key &&
+						matrix[i][j + 1] == key && matrix[i][j + 2] == key)
+				{
+					isMatch = true;
+					// Highlight
+					// Vertical
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i + k][j]] << matrix[i + k][j] << colors[0] << " " << "\033[0m";
+					}
+					// Horizontal
+					for (int k = 1; k < 3; k++)
+					{
+						gotoxy((j + k) * 4 + 1, i * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i][j + k]] << matrix[i][j + k] << colors[0] << " " << "\033[0m";
+					}
+					Sleep(500);
+					// Clear
+					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i + 1][j] = 0;
+					matrix[i + 2][j] = 0;
+					matrix[i][j + 1] = 0;
+					matrix[i][j + 2] = 0;
+				}
+				// 2. Down-Left (Corner Top-Right)
+				else if (i + 2 < rowCols && j - 2 >= 0 &&
+								 matrix[i + 1][j] == key && matrix[i + 2][j] == key &&
+								 matrix[i][j - 1] == key && matrix[i][j - 2] == key)
+				{
+					isMatch = true;
+					// Vertical
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i + k][j]] << matrix[i + k][j] << colors[0] << " " << "\033[0m";
+					}
+					// Horizontal
+					for (int k = 1; k < 3; k++)
+					{
+						gotoxy((j - k) * 4 + 1, i * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i][j - k]] << matrix[i][j - k] << colors[0] << " " << "\033[0m";
+					}
+					Sleep(500);
+					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i + 1][j] = 0;
+					matrix[i + 2][j] = 0;
+					matrix[i][j - 1] = 0;
+					matrix[i][j - 2] = 0;
+				}
+				// 3. Up-Right (Corner Bottom-Left)
+				else if (i - 2 >= 0 && j + 2 < rowCols &&
+								 matrix[i - 1][j] == key && matrix[i - 2][j] == key &&
+								 matrix[i][j + 1] == key && matrix[i][j + 2] == key)
+				{
+					isMatch = true;
+					// Vertical
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i - k][j]] << matrix[i - k][j] << colors[0] << " " << "\033[0m";
+					}
+					// Horizontal
+					for (int k = 1; k < 3; k++)
+					{
+						gotoxy((j + k) * 4 + 1, i * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i][j + k]] << matrix[i][j + k] << colors[0] << " " << "\033[0m";
+					}
+					Sleep(500);
+					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i - 1][j] = 0;
+					matrix[i - 2][j] = 0;
+					matrix[i][j + 1] = 0;
+					matrix[i][j + 2] = 0;
+				}
+				// 4. Up-Left (Corner Bottom-Right)
+				else if (i - 2 >= 0 && j - 2 >= 0 &&
+								 matrix[i - 1][j] == key && matrix[i - 2][j] == key &&
+								 matrix[i][j - 1] == key && matrix[i][j - 2] == key)
+				{
+					isMatch = true;
+					// Vertical
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i - k][j]] << matrix[i - k][j] << colors[0] << " " << "\033[0m";
+					}
+					// Horizontal
+					for (int k = 1; k < 3; k++)
+					{
+						gotoxy((j - k) * 4 + 1, i * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i][j - k]] << matrix[i][j - k] << colors[0] << " " << "\033[0m";
+					}
+					Sleep(500);
+					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i - 1][j] = 0;
+					matrix[i - 2][j] = 0;
+					matrix[i][j - 1] = 0;
+					matrix[i][j - 2] = 0;
+				}
+			}
+		}
+	}
+	return isMatch;
 }
 
 bool checkRowColMatch(int matrix[100][100])
 {
 	bool isMatch = false;
 	int key;
-
+	checkLPatterns(matrix);
 	// it is for checking the rows
 	for (int i = 0; i < rowCols; i++)
 	{
@@ -76,11 +170,8 @@ bool checkRowColMatch(int matrix[100][100])
 			}
 			else
 			{
-
 				if (currentCount >= 3)
-
 				{
-
 					isMatch = true;
 
 					for (int k = 0; k < currentCount; k++)
@@ -102,7 +193,7 @@ bool checkRowColMatch(int matrix[100][100])
 					{
 						if (currentCount >= 4 && k == currentCount - 1) // First index of consecutive (j - (currentCount-1))
 						{
-							matrix[i][j - k] = generateRandomNumber(5, 7);
+							matrix[i][j - k] = (rand() % 3) + 5;
 						}
 						else
 						{
@@ -129,7 +220,7 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				if (currentCount >= 4 && k == currentCount - 1)
 				{
-					matrix[i][rowCols - 1 - k] = generateRandomNumber(5, 7);
+					matrix[i][rowCols - 1 - k] = (rand() % 3) + 5;
 				}
 				else
 				{
@@ -166,7 +257,7 @@ bool checkRowColMatch(int matrix[100][100])
 					{
 						if (colCount >= 4 && k == colCount - 1)
 						{
-							matrix[i - k][j] = generateRandomNumber(5, 7);
+							matrix[i - k][j] = (rand() % 3) + 5;
 						}
 						else
 						{
@@ -193,7 +284,7 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				if (colCount >= 4 && k == colCount - 1)
 				{
-					matrix[rowCols - 1 - k][j] = generateRandomNumber(5, 7);
+					matrix[rowCols - 1 - k][j] = (rand() % 3) + 5;
 				}
 				else
 				{
@@ -213,7 +304,7 @@ void genTableValues(int matrix[100][100])
 		{
 			while (true)
 			{
-				int randomNumber = generateRandomNumber(1, 4);
+				int randomNumber = (rand() % 4) + 1;
 				matrix[i][j] = randomNumber;
 
 				// Check for Horizontal Match (Left) or Vertical Match (Up)
@@ -246,7 +337,7 @@ void checkFirstRowZeroes(int matrix[100][100])
 		if (matrix[0][j] == 0)
 		{
 			// Sleep(2000);
-			matrix[0][j] = generateRandomNumber(1, 4);
+			matrix[0][j] = (rand() % 4) + 1;
 		}
 	}
 }
@@ -270,7 +361,7 @@ void gravity(int matrix[100][100])
 				// {
 				if (matrix[0][j] == 0)
 				{
-					matrix[0][j] = generateRandomNumber(1, 4);
+					matrix[0][j] = (rand() % 4) + 1;
 					moved = true;
 				}
 				// }
@@ -288,7 +379,7 @@ void displayTable(int matrix[100][100])
 		// gotoxy(6, 1);
 		{
 
-			cout << "---------------------------------";
+			cout << "+---+---+---+---+---+---+---+---+";
 			cout << endl;
 			int j = 0;
 			while (j < 8)
@@ -312,7 +403,7 @@ void displayTable(int matrix[100][100])
 	}
 	if (i == 8)
 	{
-		cout << "---------------------------------";
+		cout << "+---+---+---+---+---+---+---+---+";
 		cout << endl;
 	}
 }
@@ -327,7 +418,8 @@ void moveCursor(int gridX, int gridY)
 
 int main()
 {
-	system("cls"); // Clear the console for consistent output
+	system("cls");		 // Clear the console for consistent output
+	srand(time(NULL)); // Seed the random number generator
 	int matrix[100][100];
 	genTableValues(matrix);
 	displayTable(matrix);
@@ -372,12 +464,12 @@ int main()
 					selected_y = gridY;
 					isSelected = true;
 
-					gotoxy(0, 20);
+					gotoxy(0, 18);
 					cout << "Selected (" << selected_y + 1 << ", " << selected_x + 1 << "). Now pick a neighbor to swap.      " << endl;
 					gotoxy(0, 0);
 
-					gotoxy(40, 5);
-					cout << "Moves left: " << userMoves << endl;
+					gotoxy(40, 1);
+					cout << "Moves left : " << userMoves << endl;
 				}
 				else
 				{
@@ -395,12 +487,19 @@ int main()
 						// matrix[gridY][gridX] = temp;
 
 						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
-						gotoxy(0, 18);
-						cout << "Swapped!" << endl;
 
-						if (!checkRowColMatch(matrix))
+						bool lMatch = checkLPatterns(matrix);
+						bool rcMatch = checkRowColMatch(matrix);
+
+						if (!lMatch && !rcMatch)
 						{
 							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
+						}
+						else
+						{
+							gotoxy(0, 20);
+							cout << "Swapped!" << endl;
+							userMoves--;
 						}
 						// Redraw the whole table to show the swap
 						Sleep(10000); // Optional delay to see the cascade
@@ -408,10 +507,11 @@ int main()
 						system("cls");
 						gravity(matrix);
 						displayTable(matrix);
-						gotoxy(40, 5);
+						gotoxy(0, 0);
+						gotoxy(40, 1);
 						cout << "Moves left : " << userMoves << endl;
 						// Cascading Loop
-						while (checkRowColMatch(matrix) && userMoves != 0)
+						while ((checkLPatterns(matrix) | checkRowColMatch(matrix)) && userMoves != 0)
 						{
 							Sleep(10000); // Optional delay to see the cascade
 							system("cls");
@@ -419,7 +519,8 @@ int main()
 							gravity(matrix);
 							displayTable(matrix);
 							userMoves--;
-							gotoxy(40, 5);
+							gotoxy(0, 0);
+							gotoxy(40, 1);
 							cout << "Moves left : " << userMoves << endl;
 							if (userMoves == 0)
 							{
@@ -431,7 +532,7 @@ int main()
 					}
 					else
 					{
-						gotoxy(0, 20);
+						gotoxy(0, 18);
 						cout << "Invalid! Must be adjacent. Deselected." << endl;
 					}
 
