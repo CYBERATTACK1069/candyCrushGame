@@ -13,13 +13,13 @@ int rowCols = 8;
 int userMoves = 20;
 int score = 0;
 string colors[7] = {
-		"\033[37m",				// White (Bright White)
-		"\033[31m",				// Red
-		"\033[33m",				// Yellow
-		"\033[35m",				// Purple (Magenta)
-		"\033[32m",				// Green
-		"\033[34m",				// Blue
-		"\033[38;5;208m", // Orange (Extended ANSI code, or use \03331m if simple console)
+		"\033[37m", // White (Bright White)
+		"\033[31m", // Red
+		"\033[33m", // Yellow
+		"\033[35m", // Purple (Magenta)
+		"\033[32m", // Green
+		// "\033[34m",				// Blue
+		// "\033[38;5;208m", // Orange (Extended ANSI code, or use \03331m if simple console)
 };
 
 int swapValues(int &a, int &b)
@@ -52,6 +52,7 @@ bool checkLPatterns(int matrix[100][100])
 						matrix[i][j + 1] == key && matrix[i][j + 2] == key)
 				{
 					isMatch = true;
+					score += 10;
 					// Highlight
 					// Vertical
 					for (int k = 0; k < 3; k++)
@@ -67,7 +68,7 @@ bool checkLPatterns(int matrix[100][100])
 					}
 					Sleep(500);
 					// Clear
-					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i][j] = 5;
 					matrix[i + 1][j] = 0;
 					matrix[i + 2][j] = 0;
 					matrix[i][j + 1] = 0;
@@ -92,7 +93,7 @@ bool checkLPatterns(int matrix[100][100])
 						cout << "\033[47m" << " " << colors[matrix[i][j - k]] << matrix[i][j - k] << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
-					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i][j] = 5;
 					matrix[i + 1][j] = 0;
 					matrix[i + 2][j] = 0;
 					matrix[i][j - 1] = 0;
@@ -117,7 +118,7 @@ bool checkLPatterns(int matrix[100][100])
 						cout << "\033[47m" << " " << colors[matrix[i][j + k]] << matrix[i][j + k] << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
-					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i][j] = 5;
 					matrix[i - 1][j] = 0;
 					matrix[i - 2][j] = 0;
 					matrix[i][j + 1] = 0;
@@ -142,7 +143,7 @@ bool checkLPatterns(int matrix[100][100])
 						cout << "\033[47m" << " " << colors[matrix[i][j - k]] << matrix[i][j - k] << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
-					matrix[i][j] = (rand() % 3) + 5;
+					matrix[i][j] = 5;
 					matrix[i - 1][j] = 0;
 					matrix[i - 2][j] = 0;
 					matrix[i][j - 1] = 0;
@@ -175,6 +176,7 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				if (currentCount >= 3)
 				{
+					score += 2;
 					isMatch = true;
 
 					for (int k = 0; k < currentCount; k++)
@@ -196,7 +198,8 @@ bool checkRowColMatch(int matrix[100][100])
 					{
 						if (currentCount >= 4 && k == currentCount - 1) // First index of consecutive (j - (currentCount-1))
 						{
-							matrix[i][j - k] = (rand() % 3) + 5;
+							score += 4;
+							matrix[i][j - k] = 5;
 						}
 						else
 						{
@@ -210,6 +213,7 @@ bool checkRowColMatch(int matrix[100][100])
 		// Check if the last group in the row was a match
 		if (currentCount >= 3)
 		{
+			score += 2;
 			isMatch = true;
 			for (int k = 0; k < currentCount; k++)
 			{
@@ -223,7 +227,8 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				if (currentCount >= 4 && k == currentCount - 1)
 				{
-					matrix[i][rowCols - 1 - k] = (rand() % 3) + 5;
+					score += 4;
+					matrix[i][rowCols - 1 - k] = 5;
 				}
 				else
 				{
@@ -247,6 +252,7 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				if (colCount >= 3)
 				{
+					score += 2;
 					isMatch = true;
 					for (int k = 0; k < colCount; k++)
 					{
@@ -260,7 +266,8 @@ bool checkRowColMatch(int matrix[100][100])
 					{
 						if (colCount >= 4 && k == colCount - 1)
 						{
-							matrix[i - k][j] = (rand() % 3) + 5;
+							score += 4;
+							matrix[i - k][j] = 5;
 						}
 						else
 						{
@@ -274,6 +281,7 @@ bool checkRowColMatch(int matrix[100][100])
 		// Check if the last group in the column was a match
 		if (colCount >= 3)
 		{
+			score += 2;
 			isMatch = true;
 			for (int k = 0; k < colCount; k++)
 			{
@@ -287,7 +295,8 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				if (colCount >= 4 && k == colCount - 1)
 				{
-					matrix[rowCols - 1 - k][j] = (rand() % 3) + 5;
+					score += 4;
+					matrix[rowCols - 1 - k][j] = 5;
 				}
 				else
 				{
@@ -469,10 +478,14 @@ int main()
 
 					gotoxy(0, 18);
 					cout << "Selected (" << selected_y + 1 << ", " << selected_x + 1 << "). Now pick a neighbor to swap.      " << endl;
-					gotoxy(0, 0);
 
+					gotoxy(0, 0);
 					gotoxy(40, 1);
 					cout << "Moves left : " << userMoves << endl;
+
+					gotoxy(0, 0);
+					gotoxy(40, 4);
+					cout << "Users Score : " << score << endl;
 				}
 				else
 				{
@@ -491,10 +504,7 @@ int main()
 
 						// swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
 
-						bool lMatch = checkLPatterns(matrix);
-						bool rcMatch = checkRowColMatch(matrix);
-
-						if (!lMatch && !rcMatch)
+						if (!checkRowColMatch(matrix))
 						{
 							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
 						}
@@ -515,6 +525,9 @@ int main()
 						gotoxy(0, 0);
 						gotoxy(40, 1);
 						cout << "Moves left : " << userMoves << endl;
+						gotoxy(0, 0);
+						gotoxy(40, 4);
+						cout << "Users Score : " << score << endl;
 						// Cascading Loop
 						while ((checkLPatterns(matrix) | checkRowColMatch(matrix)) && userMoves != 0)
 						{
@@ -527,6 +540,10 @@ int main()
 							gotoxy(0, 0);
 							gotoxy(40, 1);
 							cout << "Moves left : " << userMoves << endl;
+
+							gotoxy(0, 0);
+							gotoxy(40, 4);
+							cout << "User Score : " << score << endl;
 							if (userMoves == 0)
 							{
 								// exit(0);
