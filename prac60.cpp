@@ -56,11 +56,19 @@ bool checkRowColMatch(int matrix[100][100])
 			}
 			else
 			{
+
 				if (currentCount >= 3)
 				{
 					isMatch = true;
-					// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << endl;
-					// cout << colors[0];
+					for (int k = 0; k < currentCount; k++)
+					{
+						int r = i;
+						int c = j - k;
+						gotoxy(c * 4 + 1, r * 2 + 1);
+
+						cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+					}
+					Sleep(500);
 					for (int k = 0; k < currentCount; k++)
 					{
 						matrix[i][j - k] = 0;
@@ -75,9 +83,16 @@ bool checkRowColMatch(int matrix[100][100])
 			isMatch = true;
 			for (int k = 0; k < currentCount; k++)
 			{
+				int r = i;
+				int c = rowCols - 1 - k;
+				gotoxy(c * 4 + 1, r * 2 + 1);
+				cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+			}
+			Sleep(500);
+			for (int k = 0; k < currentCount; k++)
+			{
 				matrix[i][rowCols - 1 - k] = 0;
 			}
-			// cout << key << " comes " << currentCount << " times consecutively row : " << i + 1 << " replaced by 0." << endl;
 		}
 	}
 
@@ -98,6 +113,14 @@ bool checkRowColMatch(int matrix[100][100])
 					isMatch = true;
 					for (int k = 0; k < colCount; k++)
 					{
+						int r = i - k;
+						int c = j;
+						gotoxy(c * 4 + 1, r * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+					}
+					Sleep(500);
+					for (int k = 0; k < colCount; k++)
+					{
 						matrix[i - k][j] = 0;
 					}
 				}
@@ -108,6 +131,14 @@ bool checkRowColMatch(int matrix[100][100])
 		if (colCount >= 3)
 		{
 			isMatch = true;
+			for (int k = 0; k < colCount; k++)
+			{
+				int r = rowCols - 1 - k;
+				int c = j;
+				gotoxy(c * 4 + 1, r * 2 + 1);
+				cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+			}
+			Sleep(500);
 			for (int k = 0; k < colCount; k++)
 			{
 				matrix[rowCols - 1 - k][j] = 0;
@@ -332,7 +363,7 @@ int main()
 						displayTable(matrix);
 
 						// Cascading Loop
-						while (checkRowColMatch(matrix))
+						while (checkRowColMatch(matrix) && userMoves != 0)
 						{
 							Sleep(10000); // Optional delay to see the cascade
 							system("cls");
@@ -340,7 +371,12 @@ int main()
 							displayTable(matrix);
 							userMoves--;
 							gotoxy(40, 5);
-							cout << "Moves left: " << userMoves << endl;
+							cout << "Moves left : " << userMoves << endl;
+							if (userMoves == 0)
+							{
+								// exit(0);
+								abort();
+							}
 						}
 						// gravity(matrix);
 
