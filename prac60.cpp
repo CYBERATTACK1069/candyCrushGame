@@ -502,11 +502,12 @@ int main()
 						// matrix[selected_y][selected_x] = matrix[gridY][gridX];
 						// matrix[gridY][gridX] = temp;
 
-						// swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
+						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
 
 						if (!checkRowColMatch(matrix))
 						{
 							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
+							userMoves--;
 						}
 						else
 						{
@@ -536,7 +537,7 @@ int main()
 
 							gravity(matrix);
 							displayTable(matrix);
-							userMoves--;
+							// userMoves--;
 							gotoxy(0, 0);
 							gotoxy(40, 1);
 							cout << "Moves left : " << userMoves << endl;
