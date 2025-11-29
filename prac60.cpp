@@ -30,6 +30,134 @@ int swapValues(int &a, int &b)
 	return true;
 }
 
+bool checkTPatterns(int matrix[100][100])
+{
+	bool isMatch = false;
+	int key;
+	for (int i = 0; i < rowCols; i++)
+	{
+		for (int j = 0; j < rowCols; j++)
+		{
+			if (matrix[i][j] != 32)
+			{
+				key = matrix[i][j];
+
+				// 1. Down T (Matches user's logic: Stem Down i+1, i+2)
+				if ((i >= 0 && i < rowCols - 2 && j >= 1 && j < rowCols - 1) && (matrix[i][j - 1] == key && matrix[i][j + 1] == key && matrix[i + 1][j] == key && matrix[i + 2][j] == key))
+				{
+					isMatch = true;
+					score += 30;
+					// Highlight Vertical
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					}
+					// Highlight Left
+					gotoxy((j - 1) * 4 + 1, i * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					// Highlight Right
+					gotoxy((j + 1) * 4 + 1, i * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+
+					Sleep(500); // Pause so player sees it
+
+					// Clear Gems & Create Bomb
+					matrix[i][j] = 7;			 // Center becomes Bomb
+					matrix[i + 1][j] = 32; // Clear Stem
+					matrix[i + 2][j] = 32; // Clear Stem
+					matrix[i][j - 1] = 32; // Clear Left
+					matrix[i][j + 1] = 32; // Clear Right
+				}
+
+				// 2. Up T (Stem points Up: i-1, i-2)
+				else if ((i >= 2 && i < rowCols && j >= 1 && j < rowCols - 1) && (matrix[i][j - 1] == key && matrix[i][j + 1] == key && matrix[i - 1][j] == key && matrix[i - 2][j] == key))
+				{
+					isMatch = true;
+					score += 30;
+					// Highlight Vertical (Up)
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					}
+					// Highlight Left
+					gotoxy((j - 1) * 4 + 1, i * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					// Highlight Right
+					gotoxy((j + 1) * 4 + 1, i * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+
+					Sleep(500);
+
+					// Clear
+					matrix[i][j] = 7;
+					matrix[i - 1][j] = 32;
+					matrix[i - 2][j] = 32;
+					matrix[i][j - 1] = 32;
+					matrix[i][j + 1] = 32;
+				}
+
+				// 3. Left T (Stem points Left: j-1, j-2)
+				else if ((i >= 1 && i < rowCols - 1 && j >= 2 && j < rowCols) && (matrix[i - 1][j] == key && matrix[i + 1][j] == key && matrix[i][j - 1] == key && matrix[i][j - 2] == key))
+				{
+					isMatch = true;
+					score += 30;
+					// Highlight Horizontal (Left)
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy((j - k) * 4 + 1, i * 2 + 1);
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					}
+					// Highlight Up
+					gotoxy(j * 4 + 1, (i - 1) * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					// Highlight Down
+					gotoxy(j * 4 + 1, (i + 1) * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+
+					Sleep(500);
+
+					// Clear
+					matrix[i][j] = 7;
+					matrix[i - 1][j] = 32;
+					matrix[i + 1][j] = 32;
+					matrix[i][j - 1] = 32;
+					matrix[i][j - 2] = 32;
+				}
+
+				// 4. Right T (Stem points Right: j+1, j+2)
+				else if ((i >= 1 && i < rowCols - 1 && j >= 0 && j < rowCols - 2) && (matrix[i - 1][j] == key && matrix[i + 1][j] == key && matrix[i][j + 1] == key && matrix[i][j + 2] == key))
+				{
+					isMatch = true;
+					score += 30;
+					// Highlight Horizontal (Right)
+					for (int k = 0; k < 3; k++)
+					{
+						gotoxy((j + k) * 4 + 1, i * 2 + 1);
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					}
+					// Highlight Up
+					gotoxy(j * 4 + 1, (i - 1) * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					// Highlight Down
+					gotoxy(j * 4 + 1, (i + 1) * 2 + 1);
+					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+
+					Sleep(500);
+
+					// Clear
+					matrix[i][j] = 7;
+					matrix[i - 1][j] = 32;
+					matrix[i + 1][j] = 32;
+					matrix[i][j + 1] = 32;
+					matrix[i][j + 2] = 32;
+				}
+			}
+		}
+	}
+	return isMatch;
+}
 bool checkLPatterns(int matrix[100][100])
 {
 	bool isMatch = false;
@@ -156,6 +284,10 @@ bool checkRowColMatch(int matrix[100][100])
 {
 	bool isMatch = false;
 	if (checkLPatterns(matrix))
+	{
+		isMatch = true;
+	}
+	if (checkTPatterns(matrix))
 	{
 		isMatch = true;
 	}
@@ -348,7 +480,7 @@ void genTableValues(int matrix[100][100])
 // 	}
 // }
 
-void activateSpecialGem(int matrix[100][100], int r, int c)
+void activateSpecialGem(int matrix[100][100], int r, int c, int val)
 {
 	int type = matrix[r][c];
 	matrix[r][c] = 32; // Remove the special gem itself first
@@ -398,40 +530,64 @@ void activateSpecialGem(int matrix[100][100], int r, int c)
 	else if (type == 6) // Bomb (from L-match)
 	{
 		score += 30;
+		// Highlight 3x3 area
 		for (int i = r - 1; i <= r + 1; i++)
 		{
 			for (int j = c - 1; j <= c + 1; j++)
 			{
-				if (r < rowCols && c < rowCols)
+				// CORRECT BOUNDARY CHECK: Check i and j
+				if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
 				{
-					gotoxy(j * 4 + 1, i * 2 + 1);
-					if (r == i && j == c)
+					// Skip the center if desired, or just check for non-empty
+					if (r == i && c == j) continue; 
+
+					if (matrix[i][j] != 32)
 					{
-						continue;
-					}
-					else
-					{
+						gotoxy(j * 4 + 1, i * 2 + 1);
 						cout << "\033[47m" << " " << colors[matrix[i][j]] << matrix[i][j] << colors[0] << " " << "\033[0m";
 					}
 				}
 			}
 		}
+		
+		Sleep(500);
 
 		// Clear 3x3 area
 		for (int i = r - 1; i <= r + 1; i++)
 		{
 			for (int j = c - 1; j <= c + 1; j++)
 			{
-				if (r < rowCols && c < rowCols)
+				if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
 				{
-					// Boundary checks
-					if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
+					if (matrix[i][j] != 32)
 					{
-						if (matrix[i][j] != 32)
-						{
-							matrix[i][j] = 32;
-						}
+						matrix[i][j] = 32;
 					}
+				}
+			}
+		}
+	}
+	else if (type == 7)
+	{
+		for (int i = 0; i < rowCols; i++)
+		{
+			for (int j = 0; j < rowCols; j++)
+			{
+				if (matrix[i][j] == val)
+				{
+					gotoxy(j * 4 + 1, i * 2 + 1);
+					cout << "\033[47m" << " " << colors[matrix[i][j]] << matrix[i][j] << colors[0] << " " << "\033[0m";
+				}
+			}
+		}
+		Sleep(500);
+		for (int i = 0; i < rowCols; i++)
+		{
+			for (int j = 0; j < rowCols; j++)
+			{
+				if (matrix[i][j] == val)
+				{
+					matrix[i][j] = 32;
 				}
 			}
 		}
@@ -613,10 +769,30 @@ int main()
 						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
 						displayTable(matrix);
 
-						if (matrix[selected_y][selected_x] == 5 || matrix[selected_y][selected_x] == 6)
+						if (matrix[selected_y][selected_x] == 5 || matrix[selected_y][selected_x] == 6 || matrix[selected_y][selected_x] == 7)
 						{
-							activateSpecialGem(matrix, selected_y, selected_x);
-							Sleep(500);
+							system("cls");
+							gotoxy(0, 0);
+							displayTable(matrix);
+							gotoxy(0, 0);
+							// Special gem is at selected_y, selected_x. The OTHER gem is at gridY, gridX.
+							activateSpecialGem(matrix, selected_y, selected_x, matrix[gridY][gridX]);
+							
+							gotoxy(0, 0);
+							displayTable(matrix);
+							gotoxy(0, 0);
+
+							gotoxy(0, 18);
+							cout << "Swapped." << endl;
+						}
+						else if (matrix[gridY][gridX] == 5 || matrix[gridY][gridX] == 6 || matrix[gridY][gridX] == 7)
+						{
+							system("cls");
+							gotoxy(0, 0);
+							displayTable(matrix);
+							gotoxy(0, 0);
+							// Special gem is at gridY, gridX. The OTHER gem is at selected_y, selected_x.
+							activateSpecialGem(matrix, gridY, gridX, matrix[selected_y][selected_x]);
 
 							gotoxy(0, 0);
 							displayTable(matrix);
@@ -696,7 +872,7 @@ int main()
 							cout << "Users Score : " << score << endl;
 							if (userMoves == 0)
 							{
-								// exit(0);
+								exit(0);
 								abort();
 							}
 							// Sleep(10000); // Optional delay to see the cascade
