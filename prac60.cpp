@@ -470,6 +470,7 @@ int main()
 	int key;
 	while (true)
 	{
+
 		if (isCursorKeyPressed(key))
 		{
 			switch (key)
@@ -532,8 +533,8 @@ int main()
 						{
 							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
 							userMoves--;
-							// system("cls");
-							gravity(matrix);
+							system("cls");
+							displayTable(matrix);
 						}
 						else
 						{
@@ -541,12 +542,16 @@ int main()
 							gotoxy(0, 20);
 							cout << "Swapped!" << endl;
 							userMoves--;
+							gotoxy(0, 0);
+							displayTable(matrix);
+							Sleep(1000);
 						}
 						// Redraw the whole table to show the swap
 
 						// system("cls");
 						gravity(matrix);
-						// displayTable(matrix);						gotoxy(0, 0);
+						// displayTable(matrix);
+						gotoxy(0, 0);
 						gotoxy(40, 1);
 						cout << "Moves left : " << userMoves << endl;
 
@@ -557,7 +562,9 @@ int main()
 						while ((checkLPatterns(matrix) || checkRowColMatch(matrix)) && userMoves != 0)
 						{
 							// Sleep(10000); // Optional delay to see the cascade
-							system("cls");
+							gotoxy(0, 0);
+							displayTable(matrix);
+							Sleep(500);
 
 							gravity(matrix);
 							// displayTable(matrix);
@@ -568,7 +575,7 @@ int main()
 
 							gotoxy(0, 0);
 							gotoxy(40, 4);
-							cout << "User Score : " << score << endl;
+							cout << "Users Score : " << score << endl;
 							if (userMoves == 0)
 							{
 								// exit(0);
