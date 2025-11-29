@@ -40,16 +40,15 @@ bool checkLPatterns(int matrix[100][100])
 	{
 		for (int j = 0; j < rowCols; j++)
 		{
-			if (matrix[i][j] != 0)
+			if (matrix[i][j] != 32)
 			{
 				key = matrix[i][j];
 
 				/* Case 1: Down-Right (Corner is Top-Left)
 				 * It checks if (i,j) matches the two gems below it (i+1, i+2) AND the two gems to its right (j+1, j+2).  */
 
-				if (i + 2 < rowCols && j + 2 < rowCols &&
-						matrix[i + 1][j] == key && matrix[i + 2][j] == key &&
-						matrix[i][j + 1] == key && matrix[i][j + 2] == key)
+				if ((i + 2 < rowCols && j + 2 < rowCols) &&
+						(matrix[i + 1][j] == key && matrix[i + 2][j] == key && matrix[i][j + 1] == key && matrix[i][j + 2] == key))
 				{
 					isMatch = true;
 					score += 10;
@@ -58,21 +57,21 @@ bool checkLPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i + k][j]] << matrix[i + k][j] << colors[0] << " " << "\033[0m";
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
 					}
 					// Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j + k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i][j + k]] << matrix[i][j + k] << colors[0] << " " << "\033[0m";
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
 					// Clear
-					matrix[i][j] = 5;
-					matrix[i + 1][j] = 0;
-					matrix[i + 2][j] = 0;
-					matrix[i][j + 1] = 0;
-					matrix[i][j + 2] = 0;
+					matrix[i][j] = 6;
+					matrix[i + 1][j] = 32;
+					matrix[i + 2][j] = 32;
+					matrix[i][j + 1] = 32;
+					matrix[i][j + 2] = 32;
 				}
 				// 2. Down-Left (Corner Top-Right)
 				else if (i + 2 < rowCols && j - 2 >= 0 &&
@@ -84,20 +83,21 @@ bool checkLPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i + k][j]] << matrix[i + k][j] << colors[0] << " " << "\033[0m";
+
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
 					}
 					// Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j - k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i][j - k]] << matrix[i][j - k] << colors[0] << " " << "\033[0m";
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
-					matrix[i][j] = 5;
-					matrix[i + 1][j] = 0;
-					matrix[i + 2][j] = 0;
-					matrix[i][j - 1] = 0;
-					matrix[i][j - 2] = 0;
+					matrix[i][j] = 6;
+					matrix[i + 1][j] = 32;
+					matrix[i + 2][j] = 32;
+					matrix[i][j - 1] = 32;
+					matrix[i][j - 2] = 32;
 				}
 				// 3. Up-Right (Corner Bottom-Left)
 				else if (i - 2 >= 0 && j + 2 < rowCols &&
@@ -109,20 +109,19 @@ bool checkLPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i - k][j]] << matrix[i - k][j] << colors[0] << " " << "\033[0m";
-					}
-					// Horizontal
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					} // Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j + k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i][j + k]] << matrix[i][j + k] << colors[0] << " " << "\033[0m";
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
-					matrix[i][j] = 5;
-					matrix[i - 1][j] = 0;
-					matrix[i - 2][j] = 0;
-					matrix[i][j + 1] = 0;
-					matrix[i][j + 2] = 0;
+					matrix[i][j] = 6;
+					matrix[i - 1][j] = 32;
+					matrix[i - 2][j] = 32;
+					matrix[i][j + 1] = 32;
+					matrix[i][j + 2] = 32;
 				}
 				// 4. Up-Left (Corner Bottom-Right)
 				else if (i - 2 >= 0 && j - 2 >= 0 &&
@@ -134,20 +133,20 @@ bool checkLPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i - k][j]] << matrix[i - k][j] << colors[0] << " " << "\033[0m";
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
 					}
 					// Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j - k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i][j - k]] << matrix[i][j - k] << colors[0] << " " << "\033[0m";
+						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
-					matrix[i][j] = 5;
-					matrix[i - 1][j] = 0;
-					matrix[i - 2][j] = 0;
-					matrix[i][j - 1] = 0;
-					matrix[i][j - 2] = 0;
+					matrix[i][j] = 6;
+					matrix[i - 1][j] = 32;
+					matrix[i - 2][j] = 32;
+					matrix[i][j - 1] = 32;
+					matrix[i][j - 2] = 32;
 				}
 			}
 		}
@@ -168,7 +167,7 @@ bool checkRowColMatch(int matrix[100][100])
 		{
 			key = matrix[i][j];
 
-			if (matrix[i][j] != 0 && matrix[i][j] == matrix[i][j + 1])
+			if (matrix[i][j] != 32 && matrix[i][j] == matrix[i][j + 1])
 			{
 				++currentCount;
 			}
@@ -187,7 +186,7 @@ bool checkRowColMatch(int matrix[100][100])
 
 						int c = j - k;
 
-						gotoxy(c * 4 + 1.5, r * 2 + 1);
+						gotoxy(c * 4 + 1, r * 2 + 1);
 
 						cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
 					}
@@ -203,7 +202,7 @@ bool checkRowColMatch(int matrix[100][100])
 						}
 						else
 						{
-							matrix[i][j - k] = 0;
+							matrix[i][j - k] = 32;
 						}
 					}
 				}
@@ -232,7 +231,7 @@ bool checkRowColMatch(int matrix[100][100])
 				}
 				else
 				{
-					matrix[i][rowCols - 1 - k] = 0;
+					matrix[i][rowCols - 1 - k] = 32;
 				}
 			}
 		}
@@ -244,7 +243,7 @@ bool checkRowColMatch(int matrix[100][100])
 		int colCount = 1;
 		for (int i = 0; i < rowCols - 1; i++)
 		{
-			if (matrix[i][j] != 0 && matrix[i][j] == matrix[i + 1][j])
+			if (matrix[i][j] != 32 && matrix[i][j] == matrix[i + 1][j])
 			{
 				colCount++;
 			}
@@ -271,7 +270,7 @@ bool checkRowColMatch(int matrix[100][100])
 						}
 						else
 						{
-							matrix[i - k][j] = 0;
+							matrix[i - k][j] = 32;
 						}
 					}
 				}
@@ -300,7 +299,7 @@ bool checkRowColMatch(int matrix[100][100])
 				}
 				else
 				{
-					matrix[rowCols - 1 - k][j] = 0;
+					matrix[rowCols - 1 - k][j] = 32;
 				}
 			}
 		}
@@ -341,47 +340,18 @@ void genTableValues(int matrix[100][100])
 	}
 }
 
-void checkFirstRowZeroes(int matrix[100][100])
-{
+// void checkFirstRowZeroes(int matrix[100][100])
+// {
 
-	for (int j = 0; j < rowCols; j++)
-	{
-		if (matrix[0][j] == 0)
-		{
-			// Sleep(2000);
-			matrix[0][j] = (rand() % 4) + 1;
-		}
-	}
-}
-
-void gravity(int matrix[100][100])
-{
-	bool moved = true;
-	while (moved)
-	{
-		moved = false;
-		for (int i = rowCols - 1; i > 0; i--)
-		{
-			for (int j = 0; j < rowCols; j++)
-			{
-				if (matrix[i][j] == 0 && matrix[i - 1][j] != 0)
-				{
-					swapValues(matrix[i][j], matrix[i - 1][j]);
-					moved = true;
-				}
-				// for (int j = 0; j < rowCols; j++)
-				// {
-				if (matrix[0][j] == 0)
-				{
-					matrix[0][j] = (rand() % 4) + 1;
-					moved = true;
-				}
-				// }
-			}
-		}
-	}
-	checkFirstRowZeroes(matrix);
-}
+// 	for (int j = 0; j < rowCols; j++)
+// 	{
+// 		if (matrix[0][j] == 32)
+// 		{
+// 			// Sleep(2000);
+// 			matrix[0][j] = (rand() % 4) + 1;
+// 		}
+// 	}
+// }
 
 void displayTable(int matrix[100][100])
 {
@@ -401,7 +371,14 @@ void displayTable(int matrix[100][100])
 					cout << "|";
 				}
 
-				cout << " " << colors[matrix[i][j]] << matrix[i][j] << colors[0] << " ";
+				if (matrix[i][j] == 32)
+				{
+					cout << "   ";
+				}
+				else
+				{
+					cout << " " << colors[matrix[i][j]] << matrix[i][j] << colors[0] << " ";
+				}
 				// Sleep(100);
 
 				j++;
@@ -420,6 +397,51 @@ void displayTable(int matrix[100][100])
 	}
 }
 
+void gravity(int matrix[100][100])
+{
+	bool moved = true;
+	while (moved)
+	{
+		moved = false;
+		// Move gems down
+		for (int i = rowCols - 1; i > 0; i--)
+		{
+			for (int j = 0; j < rowCols; j++)
+			{
+				if (matrix[i][j] == 32 && matrix[i - 1][j] != 32)
+				{
+					swapValues(matrix[i][j], matrix[i - 1][j]);
+					moved = true;
+				}
+			}
+		}
+
+		// Refill top row
+		for (int j = 0; j < rowCols; j++)
+		{
+			if (matrix[0][j] == 32)
+			{
+				matrix[0][j] = (rand() % 4) + 1;
+				moved = true;
+			}
+		}
+
+		if (moved)
+		{
+			system("cls");
+			displayTable(matrix);
+			gotoxy(0, 0);
+			gotoxy(40, 1);
+			cout << "Moves left : " << userMoves << endl;
+
+			gotoxy(0, 0);
+			gotoxy(40, 4);
+			cout << "Users Score : " << score << endl;
+			Sleep(1000);
+		}
+	}
+}
+
 // Function to move the cursor to a specific grid cell
 void moveCursor(int gridX, int gridY)
 {
@@ -435,7 +457,7 @@ int main()
 	int matrix[100][100];
 	genTableValues(matrix);
 	displayTable(matrix);
-	checkRowColMatch(matrix);
+	// checkRowColMatch(matrix);
 
 	int gridX = 0, gridY = 0;
 	moveCursor(gridX, gridY); // Set initial cursor position
@@ -501,42 +523,44 @@ int main()
 						// int temp = matrix[selected_y][selected_x];
 						// matrix[selected_y][selected_x] = matrix[gridY][gridX];
 						// matrix[gridY][gridX] = temp;
-
+						// gotoxy(0, 0);
+						system("cls");
 						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
+						displayTable(matrix);
 
 						if (!checkRowColMatch(matrix))
 						{
 							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
 							userMoves--;
+							// system("cls");
+							gravity(matrix);
 						}
 						else
 						{
-							swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
-							displayTable(matrix);
+							// displayTable(matrix);
 							gotoxy(0, 20);
 							cout << "Swapped!" << endl;
 							userMoves--;
 						}
 						// Redraw the whole table to show the swap
-						// Sleep(10000); // Optional delay to see the cascade
 
-						system("cls");
+						// system("cls");
 						gravity(matrix);
-						displayTable(matrix);
-						gotoxy(0, 0);
+						// displayTable(matrix);						gotoxy(0, 0);
 						gotoxy(40, 1);
 						cout << "Moves left : " << userMoves << endl;
+
 						gotoxy(0, 0);
 						gotoxy(40, 4);
 						cout << "Users Score : " << score << endl;
-						// Cascading Loop
-						while ((checkLPatterns(matrix) | checkRowColMatch(matrix)) && userMoves != 0)
+
+						while ((checkLPatterns(matrix) || checkRowColMatch(matrix)) && userMoves != 0)
 						{
-							Sleep(10000); // Optional delay to see the cascade
+							// Sleep(10000); // Optional delay to see the cascade
 							system("cls");
 
 							gravity(matrix);
-							displayTable(matrix);
+							// displayTable(matrix);
 							// userMoves--;
 							gotoxy(0, 0);
 							gotoxy(40, 1);
@@ -550,6 +574,7 @@ int main()
 								// exit(0);
 								abort();
 							}
+							// Sleep(10000); // Optional delay to see the cascade
 						}
 						// gravity(matrix);
 					}
