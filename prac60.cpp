@@ -30,8 +30,6 @@ int swapValues(int &a, int &b)
 	return true;
 }
 
-void checkL(int matrix[100][100]) {}
-
 bool checkLPatterns(int matrix[100][100])
 {
 	bool isMatch = false;
@@ -157,87 +155,83 @@ bool checkLPatterns(int matrix[100][100])
 bool checkRowColMatch(int matrix[100][100])
 {
 	bool isMatch = false;
+	if (checkLPatterns(matrix))
+	{
+		isMatch = true;
+	}
+
 	int key;
-	checkLPatterns(matrix);
-	// it is for checking the rows
+	// Check Rows
 	for (int i = 0; i < rowCols; i++)
 	{
 		int currentCount = 1;
 		for (int j = 0; j < rowCols - 1; j++)
 		{
-			key = matrix[i][j];
-
 			if (matrix[i][j] != 32 && matrix[i][j] == matrix[i][j + 1])
 			{
-				++currentCount;
+				currentCount++;
 			}
 			else
 			{
 				if (currentCount >= 3)
 				{
-					score += 2;
 					isMatch = true;
-
+					score += (currentCount * 2);
+					// Highlight
 					for (int k = 0; k < currentCount; k++)
-
 					{
-
-						int r = i;
-
 						int c = j - k;
-
-						gotoxy(c * 4 + 1, r * 2 + 1);
-
-						cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+						gotoxy(c * 4 + 1, i * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[i][c]] << matrix[i][c] << colors[0] << " " << "\033[0m";
 					}
-
 					Sleep(500);
-
+					// Clear
 					for (int k = 0; k < currentCount; k++)
 					{
-						if (currentCount >= 4 && k == currentCount - 1) // First index of consecutive (j - (currentCount-1))
+						int c = j - k;
+						if (currentCount >= 4 && k == currentCount - 1)
 						{
+							matrix[i][c] = 5; // Special gem
 							score += 4;
-							matrix[i][j - k] = 5;
 						}
 						else
 						{
-							matrix[i][j - k] = 32;
+							matrix[i][c] = 32;
 						}
 					}
 				}
 				currentCount = 1;
 			}
 		}
-		// Check if the last group in the row was a match
+		// Check end of row
 		if (currentCount >= 3)
 		{
-			score += 2;
 			isMatch = true;
+			score += (currentCount * 2);
 			for (int k = 0; k < currentCount; k++)
 			{
-				int r = i;
 				int c = rowCols - 1 - k;
-				gotoxy(c * 4 + 1, r * 2 + 1);
-				cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+				gotoxy(c * 4 + 1, i * 2 + 1);
+				cout << "\033[47m" << " " << colors[matrix[i][c]] << matrix[i][c] << colors[0] << " " << "\033[0m";
 			}
 			Sleep(500);
 			for (int k = 0; k < currentCount; k++)
 			{
+				int c = rowCols - 1 - k;
 				if (currentCount >= 4 && k == currentCount - 1)
 				{
+					matrix[i][c] = 5;
 					score += 4;
-					matrix[i][rowCols - 1 - k] = 5;
 				}
 				else
 				{
-					matrix[i][rowCols - 1 - k] = 32;
+					matrix[i][c] = 32;
 				}
 			}
 		}
 	}
 
-	// it is for checking the columns
+	// Check Columns
 	for (int j = 0; j < rowCols; j++)
 	{
 		int colCount = 1;
@@ -251,59 +245,60 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				if (colCount >= 3)
 				{
-					score += 2;
 					isMatch = true;
+					score += (colCount * 2);
 					for (int k = 0; k < colCount; k++)
 					{
 						int r = i - k;
-						int c = j;
-						gotoxy(c * 4 + 1, r * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+						gotoxy(j * 4 + 1, r * 2 + 1);
+						cout << "\033[47m" << " " << colors[matrix[r][j]] << matrix[r][j] << colors[0] << " " << "\033[0m";
 					}
 					Sleep(500);
 					for (int k = 0; k < colCount; k++)
 					{
+						int r = i - k;
 						if (colCount >= 4 && k == colCount - 1)
 						{
+							matrix[r][j] = 5;
 							score += 4;
-							matrix[i - k][j] = 5;
 						}
 						else
 						{
-							matrix[i - k][j] = 32;
+							matrix[r][j] = 32;
 						}
 					}
 				}
 				colCount = 1;
 			}
 		}
-		// Check if the last group in the column was a match
+		// Check end of column
 		if (colCount >= 3)
 		{
-			score += 2;
 			isMatch = true;
+			score += (colCount * 2);
 			for (int k = 0; k < colCount; k++)
 			{
 				int r = rowCols - 1 - k;
-				int c = j;
-				gotoxy(c * 4 + 1, r * 2 + 1);
-				cout << "\033[47m" << " " << colors[matrix[r][c]] << matrix[r][c] << colors[0] << " " << "\033[0m";
+				gotoxy(j * 4 + 1, r * 2 + 1);
+				cout << "\033[47m" << " " << colors[matrix[r][j]] << matrix[r][j] << colors[0] << " " << "\033[0m";
 			}
 			Sleep(500);
 			for (int k = 0; k < colCount; k++)
 			{
+				int r = rowCols - 1 - k;
 				if (colCount >= 4 && k == colCount - 1)
 				{
+					matrix[r][j] = 5;
 					score += 4;
-					matrix[rowCols - 1 - k][j] = 5;
 				}
 				else
 				{
-					matrix[rowCols - 1 - k][j] = 32;
+					matrix[r][j] = 32;
 				}
 			}
 		}
 	}
+
 	return isMatch;
 }
 
@@ -352,6 +347,96 @@ void genTableValues(int matrix[100][100])
 // 		}
 // 	}
 // }
+
+void activateSpecialGem(int matrix[100][100], int r, int c)
+{
+	int type = matrix[r][c];
+	matrix[r][c] = 32; // Remove the special gem itself first
+
+	if (type == 5) // Line Blast (from 4-match)
+	{
+		score += 20; // Bonus for activating the special gem
+
+		// Highlight entire row to be cleared
+		for (int j = 0; j < rowCols; j++)
+		{
+			if (matrix[r][j] != 32)
+			{
+				gotoxy(j * 4 + 1, r * 2 + 1);
+				cout << "\033[47m" << " " << colors[matrix[r][j]] << matrix[r][j] << colors[0] << " " << "\033[0m";
+			}
+		}
+		for (int i = 0; i < rowCols; i++)
+		{
+			if (matrix[i][c] != 32)
+			{
+				gotoxy(c * 4 + 1, i * 2 + 1);
+				cout << "\033[47m" << " " << colors[matrix[i][c]] << matrix[i][c] << colors[0] << " " << "\033[0m";
+			}
+		}
+		Sleep(500); // Show highlight for a moment
+
+		// Clear entire row
+		for (int j = 0; j < rowCols; j++)
+		{
+			if (matrix[r][j] != 32) // Only clear if it's not already empty
+			{
+				// Score for each cleared gem
+				matrix[r][j] = 32;
+			}
+		}
+
+		Sleep(500);
+		for (int i = 0; i < rowCols; i++)
+		{
+			if (matrix[i][c] != 32)
+			{
+				matrix[i][c] = 32;
+			}
+		}
+	}
+	else if (type == 6) // Bomb (from L-match)
+	{
+		score += 30;
+		for (int i = r - 1; i <= r + 1; i++)
+		{
+			for (int j = c - 1; j <= c + 1; j++)
+			{
+				if (r < rowCols && c < rowCols)
+				{
+					gotoxy(j * 4 + 1, i * 2 + 1);
+					if (r == i && j == c)
+					{
+						continue;
+					}
+					else
+					{
+						cout << "\033[47m" << " " << colors[matrix[i][j]] << matrix[i][j] << colors[0] << " " << "\033[0m";
+					}
+				}
+			}
+		}
+
+		// Clear 3x3 area
+		for (int i = r - 1; i <= r + 1; i++)
+		{
+			for (int j = c - 1; j <= c + 1; j++)
+			{
+				if (r < rowCols && c < rowCols)
+				{
+					// Boundary checks
+					if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
+					{
+						if (matrix[i][j] != 32)
+						{
+							matrix[i][j] = 32;
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 void displayTable(int matrix[100][100])
 {
@@ -428,16 +513,15 @@ void gravity(int matrix[100][100])
 
 		if (moved)
 		{
-			system("cls");
+			gotoxy(0, 0);
 			displayTable(matrix);
-			gotoxy(0, 0);
-			gotoxy(40, 1);
-			cout << "Moves left : " << userMoves << endl;
 
-			gotoxy(0, 0);
+			gotoxy(40, 1);
+			cout << "Moves left : " << userMoves << "   " << endl;
+
 			gotoxy(40, 4);
-			cout << "Users Score : " << score << endl;
-			Sleep(1000);
+			cout << "Users Score : " << score << "   " << endl;
+			Sleep(200);
 		}
 	}
 }
@@ -524,33 +608,66 @@ int main()
 						// int temp = matrix[selected_y][selected_x];
 						// matrix[selected_y][selected_x] = matrix[gridY][gridX];
 						// matrix[gridY][gridX] = temp;
-						// gotoxy(0, 0);
-						system("cls");
+						gotoxy(0, 0);
+						// system("cls");
 						swapValues(matrix[selected_y][selected_x], matrix[gridY][gridX]);
 						displayTable(matrix);
+
+						if (matrix[selected_y][selected_x] == 5 || matrix[selected_y][selected_x] == 6)
+						{
+							activateSpecialGem(matrix, selected_y, selected_x);
+							Sleep(500);
+
+							gotoxy(0, 0);
+							displayTable(matrix);
+							gotoxy(0, 0);
+
+							gotoxy(0, 18);
+							cout << "Swapped." << endl;
+						}
+						else
+						{
+						}
 
 						if (!checkRowColMatch(matrix))
 						{
 							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
 							userMoves--;
-							system("cls");
+							// system("cls");
+							gotoxy(0, 0);
+
 							displayTable(matrix);
+							gotoxy(0, 0);
+							gotoxy(0, 18);
+							cout << "Invalid! Must be adjacent. Deselected." << endl;
 						}
 						else
 						{
 							// displayTable(matrix);
+							Sleep(500);
+							gotoxy(0, 0);
+
+							displayTable(matrix);
 							gotoxy(0, 20);
 							cout << "Swapped!" << endl;
-							userMoves--;
+							Sleep(1500);
+
+							system("cls");
+
 							gotoxy(0, 0);
+
 							displayTable(matrix);
-							Sleep(1000);
+							gotoxy(0, 20);
+							userMoves--;
 						}
 						// Redraw the whole table to show the swap
 
-						// system("cls");
+						Sleep(1000);
 						gravity(matrix);
-						// displayTable(matrix);
+						gotoxy(0, 0);
+						Sleep(1000);
+
+						displayTable(matrix);
 						gotoxy(0, 0);
 						gotoxy(40, 1);
 						cout << "Moves left : " << userMoves << endl;
@@ -561,13 +678,14 @@ int main()
 
 						while ((checkLPatterns(matrix) || checkRowColMatch(matrix)) && userMoves != 0)
 						{
-							// Sleep(10000); // Optional delay to see the cascade
+							Sleep(5000); // Optional delay to see the cascade
+
 							gotoxy(0, 0);
 							displayTable(matrix);
-							Sleep(500);
-
+							Sleep(1000);
+							gotoxy(0, 0);
 							gravity(matrix);
-							// displayTable(matrix);
+
 							// userMoves--;
 							gotoxy(0, 0);
 							gotoxy(40, 1);
@@ -582,8 +700,7 @@ int main()
 								abort();
 							}
 							// Sleep(10000); // Optional delay to see the cascade
-						}
-						// gravity(matrix);
+						} // gravity(matrix);
 					}
 					else
 					{
