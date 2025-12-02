@@ -858,6 +858,8 @@ int main()
 
 						while ((checkLPatterns(matrix) || checkRowColMatch(matrix)) && userMoves != 0)
 						{
+							gotoxy(0, 18);
+							cout << " ";
 							Sleep(5000); // Optional delay to see the cascade
 
 							gotoxy(0, 0);
