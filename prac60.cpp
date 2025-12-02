@@ -1,6 +1,6 @@
 /*
 g++ prac60.cpp -o game -lgdi32 -luser32
-game
+start game
 */
 
 #include <iostream>
@@ -539,7 +539,8 @@ void activateSpecialGem(int matrix[100][100], int r, int c, int val)
 				if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
 				{
 					// Skip the center if desired, or just check for non-empty
-					if (r == i && c == j) continue; 
+					if (r == i && c == j)
+						continue;
 
 					if (matrix[i][j] != 32)
 					{
@@ -549,7 +550,7 @@ void activateSpecialGem(int matrix[100][100], int r, int c, int val)
 				}
 			}
 		}
-		
+
 		Sleep(500);
 
 		// Clear 3x3 area
@@ -738,6 +739,9 @@ int main()
 					selected_x = gridX;
 					selected_y = gridY;
 					isSelected = true;
+					gotoxy(0, 0);
+					gotoxy(selected_x * 4 + 1, selected_y * 2 + 1);
+					cout << "\033[47m" << " " << colors[matrix[selected_y][selected_x]] << matrix[selected_y][selected_x] << colors[0] << " " << "\033[0m";
 
 					gotoxy(0, 18);
 					cout << "Selected (" << selected_y + 1 << ", " << selected_x + 1 << "). Now pick a neighbor to swap.      " << endl;
@@ -777,7 +781,7 @@ int main()
 							gotoxy(0, 0);
 							// Special gem is at selected_y, selected_x. The OTHER gem is at gridY, gridX.
 							activateSpecialGem(matrix, selected_y, selected_x, matrix[gridY][gridX]);
-							
+
 							gotoxy(0, 0);
 							displayTable(matrix);
 							gotoxy(0, 0);
