@@ -12,14 +12,15 @@ using namespace std;
 int rowCols = 8;
 int userMoves = 20;
 int score = 0;
-string colors[7] = {
-		"\033[37m", // White (Bright White)
-		"\033[31m", // Red
-		"\033[33m", // Yellow
-		"\033[35m", // Purple (Magenta)
-		"\033[32m", // Green
-		// "\033[34m",				// Blue
-		// "\033[38;5;208m", // Orange (Extended ANSI code, or use \03331m if simple console)
+string colors[8] = {
+		"\033[0m",	// Reset (used by colors[0] to reset in printHighlightedGem)
+		"\033[31m", // Red (for gem 1)
+		"\033[32m", // Green (for gem 2)
+		"\033[33m", // Yellow (for gem 3)
+		"\033[34m", // Blue (for gem 4)
+		"\033[35m", // Magenta (for gem 5 - special gem)
+		"\033[36m", // Cyan (for gem 6 - special gem)
+		"\033[37m"	// White (for gem 7 - special gem)
 };
 
 int swapValues(int &a, int &b)
@@ -28,6 +29,11 @@ int swapValues(int &a, int &b)
 	a = b;
 	b = temp;
 	return true;
+}
+
+void printHighlightedGem(int val)
+{
+	cout << "\033[47m" << " " << colors[val] << val << " " << colors[0] << "\033[0m";
 }
 
 bool checkTPatterns(int matrix[100][100])
@@ -51,14 +57,14 @@ bool checkTPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					// Highlight Left
 					gotoxy((j - 1) * 4 + 1, i * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 					// Highlight Right
 					gotoxy((j + 1) * 4 + 1, i * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 
 					Sleep(500); // Pause so player sees it
 
@@ -79,14 +85,14 @@ bool checkTPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					// Highlight Left
 					gotoxy((j - 1) * 4 + 1, i * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 					// Highlight Right
 					gotoxy((j + 1) * 4 + 1, i * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 
 					Sleep(500);
 
@@ -107,14 +113,14 @@ bool checkTPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy((j - k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					// Highlight Up
 					gotoxy(j * 4 + 1, (i - 1) * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 					// Highlight Down
 					gotoxy(j * 4 + 1, (i + 1) * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 
 					Sleep(500);
 
@@ -127,7 +133,8 @@ bool checkTPatterns(int matrix[100][100])
 				}
 
 				// 4. Right T (Stem points Right: j+1, j+2)
-				else if ((i >= 1 && i < rowCols - 1 && j >= 0 && j < rowCols - 2) && (matrix[i - 1][j] == key && matrix[i + 1][j] == key && matrix[i][j + 1] == key && matrix[i][j + 2] == key))
+				else if ((i >= 1 && i < rowCols - 1 && j >= 0 && j < rowCols - 2) &&
+								 (matrix[i - 1][j] == key && matrix[i + 1][j] == key && matrix[i][j + 1] == key && matrix[i][j + 2] == key))
 				{
 					isMatch = true;
 					score += 30;
@@ -135,14 +142,14 @@ bool checkTPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy((j + k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					// Highlight Up
 					gotoxy(j * 4 + 1, (i - 1) * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 					// Highlight Down
 					gotoxy(j * 4 + 1, (i + 1) * 2 + 1);
-					cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+					printHighlightedGem(key);
 
 					Sleep(500);
 
@@ -183,13 +190,13 @@ bool checkLPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					// Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j + k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					Sleep(500);
 					// Clear
@@ -210,13 +217,13 @@ bool checkLPatterns(int matrix[100][100])
 					{
 						gotoxy(j * 4 + 1, (i + k) * 2 + 1);
 
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					// Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j - k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					Sleep(500);
 					matrix[i][j] = 6;
@@ -235,12 +242,12 @@ bool checkLPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					} // Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j + k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					Sleep(500);
 					matrix[i][j] = 6;
@@ -259,13 +266,13 @@ bool checkLPatterns(int matrix[100][100])
 					for (int k = 0; k < 3; k++)
 					{
 						gotoxy(j * 4 + 1, (i - k) * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					// Horizontal
 					for (int k = 1; k < 3; k++)
 					{
 						gotoxy((j - k) * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[key] << key << colors[0] << " " << "\033[0m";
+						printHighlightedGem(key);
 					}
 					Sleep(500);
 					matrix[i][j] = 6;
@@ -292,7 +299,6 @@ bool checkRowColMatch(int matrix[100][100])
 		isMatch = true;
 	}
 
-	int key;
 	// Check Rows
 	for (int i = 0; i < rowCols; i++)
 	{
@@ -314,7 +320,7 @@ bool checkRowColMatch(int matrix[100][100])
 					{
 						int c = j - k;
 						gotoxy(c * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i][c]] << matrix[i][c] << colors[0] << " " << "\033[0m";
+						printHighlightedGem(matrix[i][c]);
 					}
 					Sleep(500);
 					// Clear
@@ -344,7 +350,7 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				int c = rowCols - 1 - k;
 				gotoxy(c * 4 + 1, i * 2 + 1);
-				cout << "\033[47m" << " " << colors[matrix[i][c]] << matrix[i][c] << colors[0] << " " << "\033[0m";
+				printHighlightedGem(matrix[i][c]);
 			}
 			Sleep(500);
 			for (int k = 0; k < currentCount; k++)
@@ -383,7 +389,7 @@ bool checkRowColMatch(int matrix[100][100])
 					{
 						int r = i - k;
 						gotoxy(j * 4 + 1, r * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[r][j]] << matrix[r][j] << colors[0] << " " << "\033[0m";
+						printHighlightedGem(matrix[r][j]);
 					}
 					Sleep(500);
 					for (int k = 0; k < colCount; k++)
@@ -412,7 +418,7 @@ bool checkRowColMatch(int matrix[100][100])
 			{
 				int r = rowCols - 1 - k;
 				gotoxy(j * 4 + 1, r * 2 + 1);
-				cout << "\033[47m" << " " << colors[matrix[r][j]] << matrix[r][j] << colors[0] << " " << "\033[0m";
+				printHighlightedGem(matrix[r][j]);
 			}
 			Sleep(500);
 			for (int k = 0; k < colCount; k++)
@@ -480,73 +486,85 @@ void genTableValues(int matrix[100][100])
 // 	}
 // }
 
-void activateSpecialGem(int matrix[100][100], int r, int c, int val)
+void actionOn5(int matrix[100][100], int r, int c, int val);
+void actionOn6(int matrix[100][100], int r, int c, int val);
+void actionOn7(int matrix[100][100], int r, int c, int val);
+
+void actionOn7(int matrix[100][100], int r, int c, int val)
 {
-	int type = matrix[r][c];
-	matrix[r][c] = 32; // Remove the special gem itself first
-
-	if (type == 5) // Line Blast (from 4-match)
+	for (int i = 0; i < rowCols; i++)
 	{
-		score += 20; // Bonus for activating the special gem
-
-		// Highlight entire row to be cleared
 		for (int j = 0; j < rowCols; j++)
 		{
-			if (matrix[r][j] != 32)
+			if (matrix[i][j] == val)
 			{
-				gotoxy(j * 4 + 1, r * 2 + 1);
-				cout << "\033[47m" << " " << colors[matrix[r][j]] << matrix[r][j] << colors[0] << " " << "\033[0m";
+				gotoxy(j * 4 + 1, i * 2 + 1);
+				printHighlightedGem(matrix[i][j]);
 			}
-		}
-		for (int i = 0; i < rowCols; i++)
-		{
-			if (matrix[i][c] != 32)
+			if (matrix[i][j] == 5)
 			{
-				gotoxy(c * 4 + 1, i * 2 + 1);
-				cout << "\033[47m" << " " << colors[matrix[i][c]] << matrix[i][c] << colors[0] << " " << "\033[0m";
+				matrix[i][j] = 32; // Consume before recursion
+				actionOn5(matrix, i, j, val);
 			}
-		}
-		Sleep(500); // Show highlight for a moment
-
-		// Clear entire row
-		for (int j = 0; j < rowCols; j++)
-		{
-			if (matrix[r][j] != 32) // Only clear if it's not already empty
+			else if (matrix[i][j] == 6)
 			{
-				// Score for each cleared gem
-				matrix[r][j] = 32;
+				matrix[i][j] = 32; // Consume before recursion
+				actionOn6(matrix, i, j, val);
 			}
-		}
-
-		Sleep(500);
-		for (int i = 0; i < rowCols; i++)
-		{
-			if (matrix[i][c] != 32)
+			else if (matrix[i][j] == 7)
 			{
-				matrix[i][c] = 32;
+				matrix[i][j] = 32;
+				actionOn7(matrix, i, j, val);
 			}
 		}
 	}
-	else if (type == 6) // Bomb (from L-match)
+	Sleep(500);
+	for (int i = 0; i < rowCols; i++)
 	{
-		score += 30;
-		// Highlight 3x3 area
-		for (int i = r - 1; i <= r + 1; i++)
+		for (int j = 0; j < rowCols; j++)
 		{
-			for (int j = c - 1; j <= c + 1; j++)
+			if (matrix[i][j] == val)
 			{
-				// CORRECT BOUNDARY CHECK: Check i and j
-				if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
-				{
-					// Skip the center if desired, or just check for non-empty
-					if (r == i && c == j)
-						continue;
+				matrix[i][j] = 32;
+			}
+		}
+	}
+}
 
-					if (matrix[i][j] != 32)
-					{
-						gotoxy(j * 4 + 1, i * 2 + 1);
-						cout << "\033[47m" << " " << colors[matrix[i][j]] << matrix[i][j] << colors[0] << " " << "\033[0m";
-					}
+void actionOn6(int matrix[100][100], int r, int c, int val)
+{
+	score += 30;
+	// Highlight 3x3 area
+	for (int i = r - 1; i <= r + 1; i++)
+	{
+		for (int j = c - 1; j <= c + 1; j++)
+		{
+			// CORRECT BOUNDARY CHECK: Check i and j
+			if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
+			{
+				// Skip the center if desired, or just check for non-empty
+				if (r == i && c == j)
+					continue;
+
+				if (matrix[i][j] != 32)
+				{
+					gotoxy(j * 4 + 1, i * 2 + 1);
+					printHighlightedGem(matrix[i][j]);
+				}
+				if (matrix[i][j] == 5)
+				{
+					matrix[i][j] = 32; // Consume before recursion
+					actionOn5(matrix, i, j, val);
+				}
+				else if (matrix[i][j] == 6)
+				{
+					matrix[i][j] = 32; // Consume before recursion
+					actionOn6(matrix, i, j, val);
+				}
+				else if (matrix[i][j] == 7)
+				{
+					matrix[i][j] = 32; // Consume before recursion
+					actionOn7(matrix, i, j, val);
 				}
 			}
 		}
@@ -568,30 +586,98 @@ void activateSpecialGem(int matrix[100][100], int r, int c, int val)
 			}
 		}
 	}
+}
+void actionOn5(int matrix[100][100], int r, int c, int val)
+{
+	score += 20; // Bonus for activating the special gem
+
+	// Highlight entire row to be cleared
+	for (int j = 0; j < rowCols; j++)
+	{
+		if (matrix[r][j] != 32)
+		{
+			gotoxy(j * 4 + 1, r * 2 + 1);
+			printHighlightedGem(matrix[r][j]);
+
+			if (matrix[r][j] == 5)
+			{
+				matrix[r][j] = 32; // Consume before recursion
+				actionOn5(matrix, r, j, val);
+			}
+			else if (matrix[r][j] == 6)
+			{
+				matrix[r][j] = 32; // Consume before recursion
+				actionOn6(matrix, r, j, val);
+			}
+			else if (matrix[r][j] == 7)
+			{
+				matrix[r][j] = 32; // Consume before recursion
+				actionOn7(matrix, r, j, val);
+			}
+		}
+	}
+	// Highlight entire column
+	for (int i = 0; i < rowCols; i++)
+	{
+		if (matrix[i][c] != 32)
+		{
+			gotoxy(c * 4 + 1, i * 2 + 1);
+			printHighlightedGem(matrix[i][c]);
+			// Check vertical special gems too!
+
+			if (matrix[i][c] == 5)
+			{
+				matrix[i][c] = 32; // Consume before recursion
+				actionOn5(matrix, i, c, val);
+			}
+			else if (matrix[i][c] == 6)
+			{
+				matrix[i][c] = 32; // Consume before recursion
+				actionOn6(matrix, i, c, val);
+			}
+			else if (matrix[i][c] == 7)
+			{
+				matrix[i][c] = 32; // Consume before recursion
+				actionOn7(matrix, i, c, val);
+			}
+		}
+	}
+	Sleep(500); // Show highlight for a moment
+
+	// Clear entire row
+	for (int j = 0; j < rowCols; j++)
+	{
+		if (matrix[r][j] != 32) // Only clear if it's not already empty
+		{
+			// Score for each cleared gem
+			matrix[r][j] = 32;
+		}
+	}
+	// Clear entire column
+	for (int i = 0; i < rowCols; i++)
+	{
+		if (matrix[i][c] != 32)
+		{
+			matrix[i][c] = 32;
+		}
+	}
+}
+void activateSpecialGem(int matrix[100][100], int r, int c, int val)
+{
+	int type = matrix[r][c];
+	matrix[r][c] = 32; // Remove the special gem itself first
+
+	if (type == 5) // Line Blast (from 4-match)
+	{
+		actionOn5(matrix, r, c, val);
+	}
+	else if (type == 6) // Bomb (from L-match)
+	{
+		actionOn6(matrix, r, c, val);
+	}
 	else if (type == 7)
 	{
-		for (int i = 0; i < rowCols; i++)
-		{
-			for (int j = 0; j < rowCols; j++)
-			{
-				if (matrix[i][j] == val)
-				{
-					gotoxy(j * 4 + 1, i * 2 + 1);
-					cout << "\033[47m" << " " << colors[matrix[i][j]] << matrix[i][j] << colors[0] << " " << "\033[0m";
-				}
-			}
-		}
-		Sleep(500);
-		for (int i = 0; i < rowCols; i++)
-		{
-			for (int j = 0; j < rowCols; j++)
-			{
-				if (matrix[i][j] == val)
-				{
-					matrix[i][j] = 32;
-				}
-			}
-		}
+		actionOn7(matrix, r, c, val);
 	}
 }
 
@@ -741,7 +827,7 @@ int main()
 					isSelected = true;
 					gotoxy(0, 0);
 					gotoxy(selected_x * 4 + 1, selected_y * 2 + 1);
-					cout << "\033[47m" << " " << colors[matrix[selected_y][selected_x]] << matrix[selected_y][selected_x] << colors[0] << " " << "\033[0m";
+					printHighlightedGem(matrix[selected_y][selected_x]);
 
 					gotoxy(0, 18);
 					cout << "Selected (" << selected_y + 1 << ", " << selected_x + 1 << "). Now pick a neighbor to swap.      " << endl;
@@ -812,14 +898,12 @@ int main()
 						if (!checkRowColMatch(matrix))
 						{
 							swapValues(matrix[gridY][gridX], matrix[selected_y][selected_x]);
-							userMoves--;
-							// system("cls");
 							gotoxy(0, 0);
 
 							displayTable(matrix);
 							gotoxy(0, 0);
 							gotoxy(0, 18);
-							cout << "Invalid! Must be adjacent. Deselected." << endl;
+							cout << "No match. Swap reverted." << endl;
 						}
 						else
 						{
@@ -856,11 +940,11 @@ int main()
 						gotoxy(40, 4);
 						cout << "Users Score : " << score << endl;
 
-						while ((checkLPatterns(matrix) || checkRowColMatch(matrix)) && userMoves != 0)
+						while (checkRowColMatch(matrix) && userMoves != 0)
 						{
 							gotoxy(0, 18);
 							cout << " ";
-							Sleep(5000); // Optional delay to see the cascade
+							Sleep(800);
 
 							gotoxy(0, 0);
 							displayTable(matrix);
@@ -878,7 +962,7 @@ int main()
 							cout << "Users Score : " << score << endl;
 							if (userMoves == 0)
 							{
-								exit(0);
+								// exit(0);
 								abort();
 							}
 							// Sleep(10000); // Optional delay to see the cascade
@@ -886,6 +970,11 @@ int main()
 					}
 					else
 					{
+						gotoxy(selected_x * 4 + 1, selected_y * 2 + 1);
+						if (matrix[selected_y][selected_x] == 32)
+							cout << "   ";
+						else
+							cout << " " << colors[matrix[selected_y][selected_x]] << matrix[selected_y][selected_x] << colors[0] << " ";
 						gotoxy(0, 18);
 						cout << "Invalid! Must be adjacent. Deselected." << endl;
 					}
