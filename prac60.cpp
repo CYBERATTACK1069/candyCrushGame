@@ -33,7 +33,9 @@ int swapValues(int &a, int &b)
 
 void printHighlightedGem(int val)
 {
-	cout << "\033[47m" << " " << colors[val] << val << " " << colors[0] << "\033[0m";
+	// Use Reverse Video (\033[7m) to swap FG/BG. 
+	// This creates a solid colored block (Gem Color BG, Default FG)
+	cout << colors[val] << "\033[7m" << " " << val << " " << "\033[0m";
 }
 
 bool checkTPatterns(int matrix[100][100])
