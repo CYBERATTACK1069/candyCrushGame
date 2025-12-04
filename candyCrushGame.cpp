@@ -1,5 +1,6 @@
 /*
 g++ candyCrushGame.cpp -o game -lgdi32 -luser32
+
 start game
 */
 
