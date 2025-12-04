@@ -33,7 +33,7 @@ int swapValues(int &a, int &b)
 
 void printHighlightedGem(int val)
 {
-	// Use Reverse Video (\033[7m) to swap FG/BG. 
+	// Use Reverse Video (\033[7m) to swap FG/BG.
 	// This creates a solid colored block (Gem Color BG, Default FG)
 	cout << colors[val] << "\033[7m" << " " << val << " " << "\033[0m";
 }
@@ -536,7 +536,7 @@ void actionOn7(int matrix[100][100], int r, int c, int val)
 void actionOn6(int matrix[100][100], int r, int c, int val)
 {
 	score += 30;
-	// Highlight 3x3 area
+	// 1. Highlight 3x3 area
 	for (int i = r - 1; i <= r + 1; i++)
 	{
 		for (int j = c - 1; j <= c + 1; j++)
@@ -544,46 +544,48 @@ void actionOn6(int matrix[100][100], int r, int c, int val)
 			// CORRECT BOUNDARY CHECK: Check i and j
 			if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
 			{
-				// Skip the center if desired, or just check for non-empty
-				if (r == i && c == j)
-					continue;
-
 				if (matrix[i][j] != 32)
 				{
 					gotoxy(j * 4 + 1, i * 2 + 1);
 					printHighlightedGem(matrix[i][j]);
 				}
-				if (matrix[i][j] == 5)
-				{
-					matrix[i][j] = 32; // Consume before recursion
-					actionOn5(matrix, i, j, val);
-				}
-				else if (matrix[i][j] == 6)
-				{
-					matrix[i][j] = 32; // Consume before recursion
-					actionOn6(matrix, i, j, val);
-				}
-				else if (matrix[i][j] == 7)
-				{
-					matrix[i][j] = 32; // Consume before recursion
-					actionOn7(matrix, i, j, val);
-				}
 			}
 		}
+	}
 
-		Sleep(500);
+	Sleep(500);
 
-		// Clear 3x3 area
-		for (int i = r - 1; i <= r + 1; i++)
+	// 2. Recurse & Clear 3x3 area
+	for (int i = r - 1; i <= r + 1; i++)
+	{
+		for (int j = c - 1; j <= c + 1; j++)
 		{
-			for (int j = c - 1; j <= c + 1; j++)
+			if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
 			{
-				if (i >= 0 && i < rowCols && j >= 0 && j < rowCols)
+				// Special handling for self (don't recurse, just clear)
+				if (i == r && j == c)
 				{
-					if (matrix[i][j] != 32)
+					matrix[i][j] = 32;
+					continue;
+				}
+
+				int type = matrix[i][j];
+				if (type != 32)
+				{
+					if (type == 5)
 					{
-						matrix[i][j] = 32;
+						actionOn5(matrix, i, j, val);
 					}
+					else if (type == 6)
+					{
+						actionOn6(matrix, i, j, val);
+					}
+					else if (type == 7)
+					{
+						actionOn7(matrix, i, j, val);
+					}
+
+					matrix[i][j] = 32;
 				}
 			}
 		}
